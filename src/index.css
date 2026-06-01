@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #f5f3ff;
+  --color-primary-100: #ede9fe;
+  --color-primary-500: #aa3bff;
+  --color-primary-600: #7c3aed;
+  
+  /* Nike Matte Theme - Core Colors */
+  --color-nike-volt: #CCFF00;
+  --color-nike-crimson: #E01E3C;
+  --color-dark-muted: #888888;
+  
+  --font-sans: 'Hanken Grotesk', system-ui, sans-serif;
+  --font-mono: 'Geist', monospace;
+}
+
+@layer base {
+  :root {
+    --bg-app: #FFFFFF;
+    --bg-panel: #F5F5F7;
+    --bg-card: #FFFFFF;
+    --text-main: #000000;
+    --text-muted: #666666;
+    --border-subtle: rgba(0,0,0,0.05);
+  }
+
+  .dark {
+    --bg-app: #000000;
+    --bg-panel: #111111;
+    --bg-card: #161616;
+    --text-main: #FFFFFF;
+    --text-muted: #888888;
+    --border-subtle: rgba(255,255,255,0.05);
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: fixed;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body {
+    @apply bg-[var(--bg-app)] text-[var(--text-main)] antialiased font-sans transition-colors duration-300;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-dark-muted/20 rounded-full;
+}
+
+/* Hide scrollbar for layout but allow scrolling */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Matte UI Utilities using CSS variables */
+.matte-panel {
+  @apply bg-[var(--bg-panel)] border border-[var(--border-subtle)] shadow-sm transition-colors duration-300;
+}
+
+.matte-card {
+  @apply bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-sm transition-colors duration-300;
+}
+
+.nike-button {
+  @apply bg-black text-white hover:bg-gray-900 active:scale-95 transition-all font-black italic uppercase tracking-tighter disabled:opacity-50;
+}
+
+.dark .nike-button {
+  @apply bg-nike-volt text-black hover:bg-white;
+}
