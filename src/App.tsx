@@ -14,7 +14,7 @@ import { DriveLog } from './screens/DriveLog';
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
         {/* Auth flow without bottom nav */}
         <Route path="/" element={<Login />} />
