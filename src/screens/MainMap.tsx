@@ -135,6 +135,7 @@ export const MainMap: React.FC = () => {
   const [isOnHighway, setIsOnHighway] = useState(false);
   const [trafficStatus, setTrafficStatus] = useState("교통 상황 원활");
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+  const [isStatsMinimized, setIsStatsMinimized] = useState(false);
 
   const [currentPos, setCurrentPos] = useState({ lat: 37.5665, lng: 126.9780 });
   const [searchQuery, setSearchQuery] = useState("");
@@ -1311,7 +1312,43 @@ export const MainMap: React.FC = () => {
             >
               <Navigation size={18} className="fill-none" />
             </button>
+
+            {/* 7. End Navigation Button */}
+            {isNavigating && (
+              <button 
+                onClick={() => {
+                  setIsNavigating(false); 
+                  setIsSafetyDriveMode(false); 
+                  setPolylinePath([]); 
+                  setCoursePolylinePath([]); 
+                  setSimSegment('NONE');
+                  setIsStatsMinimized(false);
+                }}
+                className="w-11 h-11 rounded-full bg-red-600 border border-red-500 flex items-center justify-center transition-all duration-300 shadow-xl text-white hover:bg-red-700 active:scale-90"
+                title="안내 종료"
+              >
+                <X size={18} strokeWidth={2.5} />
+              </button>
+            )}
           </div>
+        )}
+
+        {/* Floating red End Navigation Button for non-safety mode (WALK/BUS) */}
+        {!isSafetyDriveMode && isNavigating && (
+          <button 
+            onClick={() => {
+              setIsNavigating(false); 
+              setIsSafetyDriveMode(false); 
+              setPolylinePath([]); 
+              setCoursePolylinePath([]); 
+              setSimSegment('NONE');
+              setIsStatsMinimized(false);
+            }}
+            className="absolute right-6 top-[180px] z-[80] w-11 h-11 rounded-full bg-red-600 border border-red-500 flex items-center justify-center transition-all duration-300 shadow-xl text-white hover:bg-red-700 active:scale-90"
+            title="안내 종료"
+          >
+            <X size={18} strokeWidth={2.5} />
+          </button>
         )}
       </div>
 
@@ -2137,92 +2174,90 @@ export const MainMap: React.FC = () => {
       )}
 
       {isNavigating && (
-        <div className={cn(
-          "absolute left-6 right-6 z-50 p-5 rounded-[32px] flex flex-col gap-3 animate-in slide-in-from-bottom-6 shadow-2xl border",
-          isSafetyDriveMode ? "bottom-6" : "bottom-28",
-          transportMode === 'WALK' ? "bg-[#052416] border-emerald-500/20 text-white" :
-          transportMode === 'BUS' ? "bg-[#0b1b3d] border-sky-500/20 text-white" : "bg-nike-volt border-transparent text-black"
-        )}>
-          <div className="flex items-center">
-            <div className={cn(
-              "w-12 h-12 rounded-2xl flex items-center justify-center mr-4 shrink-0",
-              transportMode === 'WALK' ? "bg-emerald-500 text-black" :
-              transportMode === 'BUS' ? "bg-sky-500 text-black" : "bg-black text-nike-volt"
-            )}>
-              {transportMode === 'WALK' ? (
-                <PersonStanding className="animate-bounce" size={24} />
-              ) : transportMode === 'BUS' ? (
-                <Train className="animate-pulse" size={24} />
-              ) : (
-                <Navigation2 className="animate-bounce" size={24} />
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className={cn(
-                "text-[9px] font-black uppercase tracking-widest mb-0.5 text-left",
-                transportMode === 'CAR' ? "text-black/50" : "text-white/40"
-              )}>
-                {transportMode === 'WALK' ? 'WALKING TO' : transportMode === 'BUS' ? 'TRANSIT TO' : 'DRIVING TO'}
-              </div>
-              <div className={cn(
-                "text-md font-black italic uppercase tracking-tighter leading-none text-left truncate",
-                transportMode === 'CAR' ? "text-black" : "text-white"
-              )}>
-                {destination}
-              </div>
-            </div>
-            <button 
-              onClick={() => { 
-                setIsNavigating(false); 
-                setIsSafetyDriveMode(false); 
-                setPolylinePath([]); 
-                setCoursePolylinePath([]); 
-                setSimSegment('NONE'); 
-              }} 
-              className={cn(
-                "w-10 h-10 rounded-xl flex items-center justify-center ml-2",
-                transportMode === 'CAR' ? "bg-black/10 text-black" : "bg-white/10 text-white"
-              )}
-            >
-              <X size={20} />
-            </button>
-          </div>
+        isStatsMinimized ? (
+          /* Minimized tiny floating pill to restore */
+          <button 
+            onClick={() => setIsStatsMinimized(false)}
+            className={cn(
+              "absolute bottom-6 left-6 z-50 w-10 h-10 rounded-2xl flex items-center justify-center shadow-2xl border active:scale-95 transition-all animate-in zoom-in duration-300",
+              transportMode === 'WALK' ? "bg-[#052416] border-emerald-500/20 text-emerald-400" :
+              transportMode === 'BUS' ? "bg-[#0b1b3d] border-sky-500/20 text-sky-400" : "bg-nike-volt border-transparent text-black"
+            )}
+            title="상태 창 열기"
+          >
+            <Activity size={18} className="animate-pulse" />
+          </button>
+        ) : (
+          /* Compact unified HUD bar */
           <div className={cn(
-            "grid rounded-2xl px-4 py-2 border gap-2",
-            (transportMode === 'CAR' && isOnHighway) ? "grid-cols-3 bg-black/5 border-black/5" : "grid-cols-2 bg-white/5 border-white/5"
+            "absolute bottom-6 left-6 right-6 z-50 py-2 px-3.5 rounded-[24px] flex items-center justify-between shadow-2xl border transition-all duration-300 animate-in slide-in-from-bottom-2",
+            transportMode === 'WALK' ? "bg-[#052416]/95 border-emerald-500/20 text-white" :
+            transportMode === 'BUS' ? "bg-[#0b1b3d]/95 border-sky-500/20 text-white" : "bg-nike-volt border-transparent text-black"
           )}>
-            <div className="flex flex-col text-left">
-              <span className={cn("text-[8px] font-black uppercase", transportMode === 'CAR' ? "text-black/40" : "text-white/30")}>
-                {transportMode === 'WALK' ? 'Remaining Steps' : 'Remaining Distance'}
-              </span>
-              <span className={cn("text-lg font-black italic leading-none mt-0.5", transportMode === 'CAR' ? "text-black" : "text-white")}>
-                {(isSafetyDriveMode && destination === "안전운행 안내") ? '실시간 측정' : (transportMode === 'WALK' 
-                  ? `${Math.round(navInfo.distance * 1350).toLocaleString()} steps` 
-                  : `${navInfo.distance.toFixed(1)} KM`)}
-              </span>
-            </div>
-            
-            <div className={cn("flex flex-col text-left", transportMode === 'CAR' ? "border-l pl-3 border-black/10" : "border-l pl-3 border-white/10")}>
-              <span className={cn("text-[8px] font-black uppercase", transportMode === 'CAR' ? "text-black/40" : "text-white/30")}>
-                Remaining Time
-              </span>
-              <span className={cn("text-lg font-black italic leading-none mt-0.5", transportMode === 'CAR' ? "text-black" : "text-white")}>
-                {(isSafetyDriveMode && destination === "안전운행 안내") ? '주행 중' : `${navInfo.duration} MIN`}
-              </span>
+            <div className="flex items-center gap-2.5 min-w-0 flex-1">
+              <div className={cn(
+                "w-8 h-8 rounded-xl flex items-center justify-center shrink-0",
+                transportMode === 'WALK' ? "bg-emerald-500 text-black" :
+                transportMode === 'BUS' ? "bg-sky-500 text-black" : "bg-black text-nike-volt"
+              )}>
+                {transportMode === 'WALK' ? (
+                  <PersonStanding size={16} />
+                ) : transportMode === 'BUS' ? (
+                  <Train size={16} />
+                ) : (
+                  <Navigation2 size={16} />
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className={cn(
+                  "text-xs font-black italic uppercase tracking-tighter truncate text-left",
+                  transportMode === 'CAR' ? "text-black" : "text-white"
+                )}>
+                  {destination}
+                </div>
+              </div>
             </div>
 
-            {transportMode === 'CAR' && isOnHighway && (
-              <div className="flex flex-col text-left border-l pl-3 border-black/10">
-                <span className="text-[8px] font-black uppercase text-black/40">
-                  Toll Fee
-                </span>
-                <span className="text-sm font-black italic mt-1 text-black">
-                  {(isSafetyDriveMode && destination === "안전운행 안내") ? '실시간 수집' : (((navInfo as any).toll > 0 ? `${(navInfo as any).toll.toLocaleString()}원` : '무료'))}
+            {/* Compact inline statistics */}
+            <div className="flex items-center gap-3 ml-3 shrink-0">
+              <div className="flex flex-col text-right">
+                <span className={cn("text-[10px] font-black italic leading-none", transportMode === 'CAR' ? "text-black" : "text-white")}>
+                  {(isSafetyDriveMode && destination === "안전운행 안내") ? '실시간 측정' : (transportMode === 'WALK' 
+                    ? `${Math.round(navInfo.distance * 1350).toLocaleString()} 걸음` 
+                    : `${navInfo.distance.toFixed(1)} km`)}
                 </span>
               </div>
-            )}
+              <div className={cn("h-4 w-[1px]", transportMode === 'CAR' ? "bg-black/20" : "bg-white/20")} />
+              <div className="flex flex-col text-right">
+                <span className={cn("text-[10px] font-black italic leading-none", transportMode === 'CAR' ? "text-black" : "text-white")}>
+                  {(isSafetyDriveMode && destination === "안전운행 안내") ? '주행중' : `${navInfo.duration} 분`}
+                </span>
+              </div>
+              {transportMode === 'CAR' && isOnHighway && (
+                <>
+                  <div className={cn("h-4 w-[1px]", transportMode === 'CAR' ? "bg-black/20" : "bg-white/20")} />
+                  <div className="flex flex-col text-right">
+                    <span className="text-[10px] font-black italic leading-none text-black">
+                      {(isSafetyDriveMode && destination === "안전운행 안내") ? '실시간' : (((navInfo as any).toll > 0 ? `${(navInfo as any).toll.toLocaleString()} 원` : '무료'))}
+                    </span>
+                  </div>
+                </>
+              )}
+              
+              {/* X button that minimizes, does NOT end navigation */}
+              <button 
+                onClick={() => setIsStatsMinimized(true)}
+                className={cn(
+                  "w-6 h-6 rounded-lg flex items-center justify-center ml-1 active:scale-90 transition-transform",
+                  transportMode === 'CAR' ? "bg-black/10 text-black hover:bg-black/20" : "bg-white/10 text-white hover:bg-white/20"
+                )}
+                title="상태 창 숨기기"
+              >
+                <X size={14} />
+              </button>
+            </div>
           </div>
-        </div>
+        )
       )}
     </div>
   );
