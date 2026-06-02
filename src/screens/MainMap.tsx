@@ -1703,147 +1703,149 @@ export const MainMap: React.FC = () => {
           </span>
         </div>
       </div>
-      <div className="absolute top-20 left-6 right-6 z-[80] space-y-4 pointer-events-none text-left">
-        {selectedPlace !== null && activeSearchField === 'none' ? (
-          /* Route Planner Dual-Input Card */
-          <div className="bg-[#111111]/95 backdrop-blur-xl border border-white/10 p-5 rounded-[32px] pointer-events-auto shadow-2xl flex flex-col gap-3 relative animate-in slide-in-from-top-6 duration-300">
-            {/* Top row with Back button and Title */}
-            <div className="flex items-center gap-3 pb-2 border-b border-white/5">
-              <button 
-                onClick={() => {
-                  setSelectedPlace(null);
-                  setStartPlace(null);
-                  setPolylinePath([]);
-                  setCoursePolylinePath([]);
-                  setNavInfo({ distance: 0, duration: 0, toll: 0 });
-                  setActiveSearchField('none');
-                }} 
-                className="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center active:scale-90 transition-transform"
-              >
-                <ArrowLeft size={16} className="text-white" />
-              </button>
-              <span className="text-[10px] font-black italic text-nike-volt uppercase tracking-widest">
-                경로 탐색 (Route Search)
-              </span>
-            </div>
-
-            {/* Split layout: Inputs on left, Swap button on right */}
-            <div className="flex items-center gap-4">
-              <div className="flex-1 space-y-3">
-                {/* Start point selector */}
-                <div className="flex items-center gap-3 bg-white/5 border border-white/5 p-3 rounded-2xl pr-4">
-                  <div className="w-6 h-6 rounded-full border-2 border-white/35 flex items-center justify-center font-black text-[9px] text-white/50 shrink-0 select-none">
-                    S
-                  </div>
-                  <button 
-                    onClick={() => {
-                      setActiveSearchField('start');
-                      setSearchQuery(startPlace ? startPlace.place_name : "");
-                    }}
-                    className="flex-1 text-left text-xs font-black tracking-tight text-white/95 truncate"
-                  >
-                    {startPlace ? startPlace.place_name : "내 위치 (현위치)"}
-                  </button>
-                  {startPlace && (
-                    <button 
-                      onClick={resetToMyLocationStart}
-                      className="p-1 text-white/40 hover:text-white shrink-0"
-                    >
-                      <X size={14} />
-                    </button>
-                  )}
-                </div>
-
-                {/* Destination point selector */}
-                <div className="flex items-center gap-3 bg-white/5 border border-white/5 p-3 rounded-2xl pr-4">
-                  <div className="w-6 h-6 rounded-full bg-nike-volt flex items-center justify-center font-black text-[9px] text-black shrink-0 select-none">
-                    E
-                  </div>
-                  <button 
-                    onClick={() => {
-                      setActiveSearchField('destination');
-                      setSearchQuery(selectedPlace.place_name);
-                    }}
-                    className="flex-1 text-left text-xs font-black tracking-tight text-nike-volt truncate"
-                  >
-                    {selectedPlace.place_name}
-                  </button>
-                </div>
+      {!isNavigating && (
+        <div className="absolute top-20 left-6 right-6 z-[80] space-y-4 pointer-events-none text-left">
+          {selectedPlace !== null && activeSearchField === 'none' ? (
+            /* Route Planner Dual-Input Card */
+            <div className="bg-[#111111]/95 backdrop-blur-xl border border-white/10 p-5 rounded-[32px] pointer-events-auto shadow-2xl flex flex-col gap-3 relative animate-in slide-in-from-top-6 duration-300">
+              {/* Top row with Back button and Title */}
+              <div className="flex items-center gap-3 pb-2 border-b border-white/5">
+                <button 
+                  onClick={() => {
+                    setSelectedPlace(null);
+                    setStartPlace(null);
+                    setPolylinePath([]);
+                    setCoursePolylinePath([]);
+                    setNavInfo({ distance: 0, duration: 0, toll: 0 });
+                    setActiveSearchField('none');
+                  }} 
+                  className="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center active:scale-90 transition-transform"
+                >
+                  <ArrowLeft size={16} className="text-white" />
+                </button>
+                <span className="text-[10px] font-black italic text-nike-volt uppercase tracking-widest">
+                  경로 탐색 (Route Search)
+                </span>
               </div>
 
-              {/* Dedicated Swap Button Column */}
-              <button 
-                onClick={swapStartEnd}
-                className="w-11 h-11 bg-nike-volt text-black rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-transform shrink-0"
-                title="출발지/목적지 변경"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-black"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
-              </button>
-            </div>
-          </div>
-        ) : (
-          /* Standard Search Bar or Active Search mode input */
-          <div className="flex items-center gap-3 bg-[#111111]/95 backdrop-blur-xl border border-white/10 p-2 pl-3 rounded-[24px] pointer-events-auto shadow-2xl">
-            {activeSearchField !== 'none' ? (
-              <button 
-                onClick={() => {
-                  setActiveSearchField('none');
-                  setSearchQuery("");
-                  setSearchResults([]);
-                }} 
-                className="w-10 h-10 bg-white/5 rounded-2xl flex items-center justify-center shrink-0 active:scale-95 transition-transform"
-              >
-                <ArrowLeft className="text-white" size={20} />
-              </button>
-            ) : (
-              <button onClick={() => setIsMenuOpen(true)} className="w-10 h-10 bg-white/5 rounded-2xl flex items-center justify-center shrink-0 active:scale-95 transition-transform">
-                <Menu className="text-white" size={20} />
-              </button>
-            )}
-            <Search className="text-white/40 ml-1" size={20} />
-            <input 
-              type="text" 
-              placeholder={
-                activeSearchField === 'start' ? "출발지 검색..." : 
-                activeSearchField === 'destination' ? "목적지 검색..." : 
-                t('map_search_placeholder')
-              }
-              className="flex-1 bg-transparent border-none outline-none text-white text-sm font-bold placeholder:text-white/20 uppercase"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSearch(searchQuery)}
-              autoFocus={activeSearchField !== 'none'}
-            />
-            {activeSearchField === 'none' && (
-              <button onClick={() => setIsRightSidebarOpen(true)} className="w-10 h-10 bg-white/5 rounded-2xl flex items-center justify-center shrink-0 active:scale-95 transition-transform text-nike-volt">
-                <MapPin size={20} />
-              </button>
-            )}
-          </div>
-        )}
+              {/* Split layout: Inputs on left, Swap button on right */}
+              <div className="flex items-center gap-4">
+                <div className="flex-1 space-y-3">
+                  {/* Start point selector */}
+                  <div className="flex items-center gap-3 bg-white/5 border border-white/5 p-3 rounded-2xl pr-4">
+                    <div className="w-6 h-6 rounded-full border-2 border-white/35 flex items-center justify-center font-black text-[9px] text-white/50 shrink-0 select-none">
+                      S
+                    </div>
+                    <button 
+                      onClick={() => {
+                        setActiveSearchField('start');
+                        setSearchQuery(startPlace ? startPlace.place_name : "");
+                      }}
+                      className="flex-1 text-left text-xs font-black tracking-tight text-white/95 truncate"
+                    >
+                      {startPlace ? startPlace.place_name : "내 위치 (현위치)"}
+                    </button>
+                    {startPlace && (
+                      <button 
+                        onClick={resetToMyLocationStart}
+                        className="p-1 text-white/40 hover:text-white shrink-0"
+                      >
+                        <X size={14} />
+                      </button>
+                    )}
+                  </div>
 
-        {!selectedPlace && searchResults.length === 0 && (
-          <div className="flex gap-3 overflow-x-auto no-scrollbar py-2 pointer-events-auto mt-2 active:cursor-grabbing">
-            {[
-              { id: 'fuel', icon: Fuel, label: 'GAS' },
-              { id: 'food', icon: Utensils, label: 'FOOD' },
-              { id: 'hotel', icon: Bed, label: 'STAY' },
-              { id: 'sight', icon: Landmark, label: 'VIEW' },
-              { id: 'cafe', icon: Clock, label: 'CAFE' },
-              { id: 'parking', icon: MapPin, label: 'PARK' }
-            ].map((cat) => (
-              <button 
-                key={cat.id} 
-                onClick={() => handleSearch(cat.label, true)} 
-                className="flex items-center gap-3 bg-[#111111]/85 backdrop-blur-md border border-white/5 px-6 py-4 rounded-[22px] shrink-0 hover:border-nike-volt/40 transition-all active:scale-90"
-              >
-                <cat.icon className="text-nike-volt" size={18} />
-                <span className="text-[11px] font-black italic text-white uppercase tracking-tighter">{cat.label}</span>
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+                  {/* Destination point selector */}
+                  <div className="flex items-center gap-3 bg-white/5 border border-white/5 p-3 rounded-2xl pr-4">
+                    <div className="w-6 h-6 rounded-full bg-nike-volt flex items-center justify-center font-black text-[9px] text-black shrink-0 select-none">
+                      E
+                    </div>
+                    <button 
+                      onClick={() => {
+                        setActiveSearchField('destination');
+                        setSearchQuery(selectedPlace.place_name);
+                      }}
+                      className="flex-1 text-left text-xs font-black tracking-tight text-nike-volt truncate"
+                    >
+                      {selectedPlace.place_name}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Dedicated Swap Button Column */}
+                <button 
+                  onClick={swapStartEnd}
+                  className="w-11 h-11 bg-nike-volt text-black rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-transform shrink-0"
+                  title="출발지/목적지 변경"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-black"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
+                </button>
+              </div>
+            </div>
+          ) : (
+            /* Standard Search Bar or Active Search mode input */
+            <div className="flex items-center gap-3 bg-[#111111]/95 backdrop-blur-xl border border-white/10 p-2 pl-3 rounded-[24px] pointer-events-auto shadow-2xl">
+              {activeSearchField !== 'none' ? (
+                <button 
+                  onClick={() => {
+                    setActiveSearchField('none');
+                    setSearchQuery("");
+                    setSearchResults([]);
+                  }} 
+                  className="w-10 h-10 bg-white/5 rounded-2xl flex items-center justify-center shrink-0 active:scale-95 transition-transform"
+                >
+                  <ArrowLeft className="text-white" size={20} />
+                </button>
+              ) : (
+                <button onClick={() => setIsMenuOpen(true)} className="w-10 h-10 bg-white/5 rounded-2xl flex items-center justify-center shrink-0 active:scale-95 transition-transform">
+                  <Menu className="text-white" size={20} />
+                </button>
+              )}
+              <Search className="text-white/40 ml-1" size={20} />
+              <input 
+                type="text" 
+                placeholder={
+                  activeSearchField === 'start' ? "출발지 검색..." : 
+                  activeSearchField === 'destination' ? "목적지 검색..." : 
+                  t('map_search_placeholder')
+                }
+                className="flex-1 bg-transparent border-none outline-none text-white text-sm font-bold placeholder:text-white/20 uppercase"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch(searchQuery)}
+                autoFocus={activeSearchField !== 'none'}
+              />
+              {activeSearchField === 'none' && (
+                <button onClick={() => setIsRightSidebarOpen(true)} className="w-10 h-10 bg-white/5 rounded-2xl flex items-center justify-center shrink-0 active:scale-95 transition-transform text-nike-volt">
+                  <MapPin size={20} />
+                </button>
+              )}
+            </div>
+          )}
+
+          {!selectedPlace && searchResults.length === 0 && (
+            <div className="flex gap-3 overflow-x-auto no-scrollbar py-2 pointer-events-auto mt-2 active:cursor-grabbing">
+              {[
+                { id: 'fuel', icon: Fuel, label: 'GAS' },
+                { id: 'food', icon: Utensils, label: 'FOOD' },
+                { id: 'hotel', icon: Bed, label: 'STAY' },
+                { id: 'sight', icon: Landmark, label: 'VIEW' },
+                { id: 'cafe', icon: Clock, label: 'CAFE' },
+                { id: 'parking', icon: MapPin, label: 'PARK' }
+              ].map((cat) => (
+                <button 
+                  key={cat.id} 
+                  onClick={() => handleSearch(cat.label, true)} 
+                  className="flex items-center gap-3 bg-[#111111]/85 backdrop-blur-md border border-white/5 px-6 py-4 rounded-[22px] shrink-0 hover:border-nike-volt/40 transition-all active:scale-90"
+                >
+                  <cat.icon className="text-nike-volt" size={18} />
+                  <span className="text-[11px] font-black italic text-white uppercase tracking-tighter">{cat.label}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Always Visible Stats Bar - Hidden during navigation to prevent marker overlapping */}
       {!isNavigating && (
