@@ -1439,7 +1439,7 @@ export const MainMap: React.FC = () => {
       )}
 
       {/* Naver Map Style Highway Mode HUD / Transit Stops HUD / Walk Health HUD (Only during Navigation) */}
-      {isNavigating && transportMode === 'CAR' && (
+      {isNavigating && transportMode === 'CAR' && isOnHighway && (
         <div className={cn(
           "absolute z-[80] w-56 bg-black/95 backdrop-blur-xl border border-white/10 rounded-[32px] p-5 flex flex-col max-h-[38vh] overflow-y-auto no-scrollbar shadow-2xl animate-in duration-500",
           isSafetyDriveMode 
