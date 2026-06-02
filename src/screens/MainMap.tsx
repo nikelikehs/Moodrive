@@ -1313,28 +1313,11 @@ export const MainMap: React.FC = () => {
               <Navigation size={18} className="fill-none" />
             </button>
 
-            {/* 7. End Navigation Button */}
-            {isNavigating && (
-              <button 
-                onClick={() => {
-                  setIsNavigating(false); 
-                  setIsSafetyDriveMode(false); 
-                  setPolylinePath([]); 
-                  setCoursePolylinePath([]); 
-                  setSimSegment('NONE');
-                  setIsStatsMinimized(false);
-                }}
-                className="w-11 h-11 rounded-full bg-red-600 border border-red-500 flex items-center justify-center transition-all duration-300 shadow-xl text-white hover:bg-red-700 active:scale-90"
-                title="안내 종료"
-              >
-                <X size={18} strokeWidth={2.5} />
-              </button>
-            )}
           </div>
         )}
 
-        {/* Floating red End Navigation Button for non-safety mode (WALK/BUS) */}
-        {!isSafetyDriveMode && isNavigating && (
+        {/* Labeled '운행 종료' pill button visible during any active navigation */}
+        {isNavigating && (
           <button 
             onClick={() => {
               setIsNavigating(false); 
@@ -1344,10 +1327,11 @@ export const MainMap: React.FC = () => {
               setSimSegment('NONE');
               setIsStatsMinimized(false);
             }}
-            className="absolute right-6 top-[180px] z-[80] w-11 h-11 rounded-full bg-red-600 border border-red-500 flex items-center justify-center transition-all duration-300 shadow-xl text-white hover:bg-red-700 active:scale-90"
-            title="안내 종료"
+            className="absolute right-6 top-[136px] z-[100] bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-2xl text-[10px] font-black italic uppercase tracking-wider shadow-2xl active:scale-95 transition-all flex items-center gap-1.5"
+            title="운행 종료"
           >
-            <X size={18} strokeWidth={2.5} />
+            <X size={12} strokeWidth={3} />
+            운행 종료
           </button>
         )}
       </div>
