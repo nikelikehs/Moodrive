@@ -1133,23 +1133,24 @@ export const MainMap: React.FC = () => {
           )}
 
           <CustomOverlayMap position={currentPos} yAnchor={1}>
-            <div className={cn(
-              "w-14 h-14 rounded-full flex items-center justify-center border-4 border-black transition-all shadow-2xl", 
-              isNavigating && "scale-110",
-              isSafetyDriveMode && "shadow-[0_0_15px_rgba(204,255,0,0.6)] border-nike-volt/80",
-              transportMode === 'WALK' ? "bg-emerald-500 text-black" :
-              transportMode === 'BUS' ? "bg-sky-500 text-white" : "bg-nike-volt text-black"
-            )}>
-              {isSafetyDriveMode ? (
-                <Car className="text-black fill-black/10 animate-engine-vibrate" size={28} />
-              ) : transportMode === 'WALK' ? (
-                <PersonStanding className={cn(isNavigating && "animate-bounce")} size={28} strokeWidth={2.5} />
-              ) : transportMode === 'BUS' ? (
-                <Train size={28} strokeWidth={2.5} />
-              ) : (
-                <Navigation2 className={cn("text-black fill-black transition-transform duration-500", isNavigating ? "rotate-0 scale-125" : "-rotate-45")} size={28} />
-              )}
-            </div>
+            {isSafetyDriveMode ? (
+              <Car className="text-nike-volt fill-nike-volt/20 drop-shadow-[0_0_8px_rgba(204,255,0,0.6)] scale-150 transition-all duration-300" size={32} />
+            ) : (
+              <div className={cn(
+                "w-14 h-14 rounded-full flex items-center justify-center border-4 border-black transition-all shadow-2xl", 
+                isNavigating && "scale-110",
+                transportMode === 'WALK' ? "bg-emerald-500 text-black" :
+                transportMode === 'BUS' ? "bg-sky-500 text-white" : "bg-nike-volt text-black"
+              )}>
+                {transportMode === 'WALK' ? (
+                  <PersonStanding className={cn(isNavigating && "animate-bounce")} size={28} strokeWidth={2.5} />
+                ) : transportMode === 'BUS' ? (
+                  <Train size={28} strokeWidth={2.5} />
+                ) : (
+                  <Navigation2 className={cn("text-black fill-black transition-transform duration-500", isNavigating ? "rotate-0 scale-125" : "-rotate-45")} size={28} />
+                )}
+              </div>
+            )}
           </CustomOverlayMap>
 
           {/* Custom Overlay Pins for search results in Safety Driving Mode */}
