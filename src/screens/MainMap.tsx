@@ -1439,8 +1439,13 @@ export const MainMap: React.FC = () => {
       )}
 
       {/* Naver Map Style Highway Mode HUD / Transit Stops HUD / Walk Health HUD (Only during Navigation) */}
-      {isNavigating && transportMode === 'CAR' && !isSafetyDriveMode && (
-        <div className="absolute right-6 top-[156px] z-[80] w-56 bg-black/95 backdrop-blur-xl border border-white/10 rounded-[32px] p-5 flex flex-col max-h-[38vh] overflow-y-auto no-scrollbar shadow-2xl animate-in slide-in-from-right-10 duration-500">
+      {isNavigating && transportMode === 'CAR' && (
+        <div className={cn(
+          "absolute z-[80] w-56 bg-black/95 backdrop-blur-xl border border-white/10 rounded-[32px] p-5 flex flex-col max-h-[38vh] overflow-y-auto no-scrollbar shadow-2xl animate-in duration-500",
+          isSafetyDriveMode 
+            ? "left-6 top-[180px] slide-in-from-left-10" 
+            : "right-6 top-[156px] slide-in-from-right-10"
+        )}>
           <div className="flex items-center justify-between mb-3 border-b border-white/5 pb-2 shrink-0">
             <span className="text-[10px] font-black text-nike-volt tracking-widest uppercase">Highway Mode</span>
             <span className="text-[8px] font-mono text-white/40 uppercase">Gyeongbu Expwy</span>
@@ -1450,41 +1455,43 @@ export const MainMap: React.FC = () => {
             <div className="absolute left-[9px] top-0 bottom-0 w-[2px] bg-white/10 rounded-full" />
             
             <div className="space-y-4">
-              {highwayItems.map((item) => (
-                <div key={item.id} className="relative flex gap-3 text-left">
-                  {/* Timeline Dot */}
-                  <div className="relative z-10 w-5 h-5 rounded-full bg-[#111111] border border-white/10 flex items-center justify-center shrink-0">
-                    <div className={cn(
-                      "w-2 h-2 rounded-full transition-all duration-300",
-                      item.distance === 0 ? "bg-white/20" :
-                      item.type === 'TG' ? "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]" : "bg-nike-volt shadow-[0_0_8px_rgba(204,255,0,0.8)]"
-                    )} />
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start gap-1">
-                      <h4 className={cn(
-                        "text-xs font-black uppercase tracking-tight truncate",
-                        item.distance === 0 ? "text-white/30" : "text-white"
-                      )}>
-                        {item.name}
-                      </h4>
-                      <span className={cn(
-                        "text-[9px] font-mono shrink-0 font-bold",
-                        item.distance === 0 ? "text-white/20" : "text-nike-volt"
-                      )}>
-                        {item.distance === 0 ? "PASSED" : `${item.distance.toFixed(1)} km`}
-                      </span>
+              {highwayItems
+                .filter(item => !(isSafetyDriveMode && item.type === 'RA'))
+                .map((item) => (
+                  <div key={item.id} className="relative flex gap-3 text-left">
+                    {/* Timeline Dot */}
+                    <div className="relative z-10 w-5 h-5 rounded-full bg-[#111111] border border-white/10 flex items-center justify-center shrink-0">
+                      <div className={cn(
+                        "w-2 h-2 rounded-full transition-all duration-300",
+                        item.distance === 0 ? "bg-white/20" :
+                        item.type === 'TG' ? "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]" : "bg-nike-volt shadow-[0_0_8px_rgba(204,255,0,0.8)]"
+                      )} />
                     </div>
-                    <p className={cn(
-                      "text-[9px] mt-0.5 font-bold uppercase",
-                      item.distance === 0 ? "text-white/10" : "text-white/40"
-                    )}>
-                      {item.info}
-                    </p>
+                    
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-start gap-1">
+                        <h4 className={cn(
+                          "text-xs font-black uppercase tracking-tight truncate",
+                          item.distance === 0 ? "text-white/30" : "text-white"
+                        )}>
+                          {item.name}
+                        </h4>
+                        <span className={cn(
+                          "text-[9px] font-mono shrink-0 font-bold",
+                          item.distance === 0 ? "text-white/20" : "text-nike-volt"
+                        )}>
+                          {item.distance === 0 ? "PASSED" : `${item.distance.toFixed(1)} km`}
+                        </span>
+                      </div>
+                      <p className={cn(
+                        "text-[9px] mt-0.5 font-bold uppercase",
+                        item.distance === 0 ? "text-white/10" : "text-white/40"
+                      )}>
+                        {item.info}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </div>
