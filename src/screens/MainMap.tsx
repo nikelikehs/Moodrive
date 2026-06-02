@@ -2066,7 +2066,7 @@ export const MainMap: React.FC = () => {
 
       {/* Selected Place Details Card for Safety Driving Mode */}
       {isSafetyDriveMode && selectedPlace && (
-        <div className="absolute bottom-[240px] left-6 right-6 z-[70] bg-[#111111]/95 border border-white/10 rounded-2xl p-3 flex justify-between items-center shadow-2xl animate-in slide-in-from-bottom-2 duration-300 pointer-events-auto">
+        <div className="absolute bottom-[148px] left-6 right-6 z-[70] bg-[#111111]/95 border border-white/10 rounded-2xl p-3 flex justify-between items-center shadow-2xl animate-in slide-in-from-bottom-2 duration-300 pointer-events-auto">
           <div className="flex-1 min-w-0 text-left pl-1">
             <h4 className="text-xs font-black text-white truncate">{selectedPlace.place_name}</h4>
             <p className="text-[9px] text-white/40 font-bold truncate mt-0.5">{selectedPlace.road_address_name || selectedPlace.address_name}</p>
@@ -2094,7 +2094,8 @@ export const MainMap: React.FC = () => {
 
       {isNavigating && (
         <div className={cn(
-          "absolute bottom-[248px] left-6 z-[70] w-20 h-20 rounded-full flex flex-col items-center justify-center transition-all duration-300 shadow-2xl border-2 backdrop-blur-xl select-none",
+          "absolute left-6 z-[70] w-20 h-20 rounded-full flex flex-col items-center justify-center transition-all duration-300 shadow-2xl border-2 backdrop-blur-xl select-none",
+          isSafetyDriveMode ? "bottom-[156px]" : "bottom-[248px]",
           (cameraDistance !== null && currentSpeed > cameraLimit)
             ? "bg-red-600/90 border-red-500 animate-pulse text-white"
             : "bg-[#111111]/90 border-white/15 text-white"
@@ -2113,7 +2114,8 @@ export const MainMap: React.FC = () => {
 
       {isNavigating && (
         <div className={cn(
-          "absolute bottom-28 left-6 right-6 z-50 p-5 rounded-[32px] flex flex-col gap-3 animate-in slide-in-from-bottom-6 shadow-2xl border",
+          "absolute left-6 right-6 z-50 p-5 rounded-[32px] flex flex-col gap-3 animate-in slide-in-from-bottom-6 shadow-2xl border",
+          isSafetyDriveMode ? "bottom-6" : "bottom-28",
           transportMode === 'WALK' ? "bg-[#052416] border-emerald-500/20 text-white" :
           transportMode === 'BUS' ? "bg-[#0b1b3d] border-sky-500/20 text-white" : "bg-nike-volt border-transparent text-black"
         )}>
