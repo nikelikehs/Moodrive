@@ -87,3 +87,16 @@
 .dark .nike-button {
   @apply bg-nike-volt text-black hover:bg-white;
 }
+
+/* Car engine vibration animation for Safety Driving Mode */
+@keyframes engine-vibrate {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(0.5px, -0.5px) rotate(1deg); }
+  50% { transform: translate(-0.5px, 0.5px) rotate(-1deg); }
+  75% { transform: translate(0.5px, 0.5px) rotate(0deg); }
+}
+
+.animate-engine-vibrate {
+  animation: engine-vibrate 0.15s linear infinite;
+}
+
