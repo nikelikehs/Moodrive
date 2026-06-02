@@ -2118,9 +2118,56 @@ export const MainMap: React.FC = () => {
           </div>
           <div className="flex items-center gap-2 ml-3 shrink-0">
             <button 
-              onClick={() => {
-                setIsSafetyDriveMode(false);
-                selectPlace(selectedPlace);
+              onClick={async () => {
+                setIsSafetyDriveMode(true);
+                setTransportMode('CAR');
+                setIsNavigating(true);
+                setSimSegment('TRANSIT');
+                
+                voiceService.speak(`목적지 ${selectedPlace.place_name}까지 안내를 시작합니다.`);
+                setSearchResults([]);
+                setSearchQuery("");
+                
+                const startCoords = startPlace 
+                  ? { lat: parseFloat(startPlace.y), lng: parseFloat(startPlace.x) } 
+                  : currentPos;
+                const end = { lat: parseFloat(selectedPlace.y), lng: parseFloat(selectedPlace.x) };
+                
+                try {
+                  const carRes = await fetchOSRMRoute(startCoords, end, 'CAR');
+                  const routeOption = localStorage.getItem('moodrive_nav_route_option') || 'RECOMMEND';
+                  let adjustedCar = { ...carRes, toll: 0 };
+                  if (routeOption === 'SHORTEST') {
+                    adjustedCar.distance = parseFloat((carRes.distance * 0.95).toFixed(1));
+                    adjustedCar.duration = Math.ceil(carRes.duration * 1.05);
+                    adjustedCar.toll = Math.round(adjustedCar.distance * 100 / 100) * 100;
+                  } else if (routeOption === 'TOLL_FREE') {
+                    adjustedCar.distance = parseFloat((carRes.distance * 1.1).toFixed(1));
+                    adjustedCar.duration = Math.ceil(carRes.duration * 1.25);
+                    adjustedCar.toll = 0;
+                  } else {
+                    adjustedCar.toll = Math.round(carRes.distance * 130 / 100) * 100;
+                  }
+                  
+                  setPolylinePath(adjustedCar.path);
+                  setNavInfo({ 
+                    distance: adjustedCar.distance, 
+                    duration: adjustedCar.duration, 
+                    toll: adjustedCar.toll 
+                  });
+                  
+                  if (map) {
+                    const bounds = new kakao.maps.LatLngBounds();
+                    bounds.extend(new kakao.maps.LatLng(startCoords.lat, startCoords.lng));
+                    bounds.extend(new kakao.maps.LatLng(end.lat, end.lng));
+                    map.setBounds(bounds, 120);
+                  }
+                } catch (e) {
+                  console.warn("OSRM direct nav failed", e);
+                }
+                
+                setDestination(selectedPlace.place_name);
+                setSelectedPlace(null);
               }}
               className="bg-nike-volt text-black px-3 py-1.5 rounded-xl text-[10px] font-black italic uppercase tracking-tighter hover:scale-105 active:scale-95 transition-all flex items-center gap-1"
             >
