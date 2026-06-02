@@ -1182,7 +1182,7 @@ export const MainMap: React.FC = () => {
           <button 
             onClick={triggerVoiceAssistant}
             className={cn(
-              "absolute right-6 w-14 h-14 rounded-2xl flex items-center justify-center z-[70] active:scale-90 transition-all bottom-[328px]",
+              "absolute right-6 w-14 h-14 rounded-2xl flex items-center justify-center z-[70] active:scale-90 transition-all bottom-[248px]",
               aiStatus === 'LISTENING' 
                 ? "bg-nike-volt text-black shadow-[0_0_15px_rgba(204,255,0,0.6)] animate-pulse" 
                 : "bg-[#111111]/90 backdrop-blur-xl border border-white/10 text-nike-volt"
@@ -1198,7 +1198,7 @@ export const MainMap: React.FC = () => {
             onClick={() => {
               if (map) map.panTo(new kakao.maps.LatLng(currentPos.lat, currentPos.lng));
             }}
-            className="absolute right-6 w-14 h-14 bg-[#111111]/90 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center z-[70] active:scale-90 transition-all text-nike-volt bottom-64"
+            className="absolute right-6 w-14 h-14 bg-[#111111]/90 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center z-[70] active:scale-90 transition-all text-nike-volt bottom-[176px]"
           >
             <Navigation size={26} className="fill-none" />
           </button>
@@ -1208,7 +1208,7 @@ export const MainMap: React.FC = () => {
         {!isNavigating && (
           <button 
             onClick={startSafetyDrive}
-            className="absolute right-6 w-14 h-14 bg-[#111111]/90 backdrop-blur-xl border border-white/10 rounded-2xl flex flex-col items-center justify-center z-[70] active:scale-90 transition-all text-nike-volt bottom-[184px]"
+            className="absolute right-6 w-14 h-14 bg-[#111111]/90 backdrop-blur-xl border border-white/10 rounded-2xl flex flex-col items-center justify-center z-[70] active:scale-90 transition-all text-nike-volt bottom-[104px]"
             title="안전주행 모드"
           >
             <Shield size={20} className="fill-nike-volt/10" />
@@ -1849,7 +1849,7 @@ export const MainMap: React.FC = () => {
 
       {/* Always Visible Stats Bar - Hidden during navigation to prevent marker overlapping */}
       {!isNavigating && (
-        <div className="absolute bottom-64 left-6 z-50 bg-[#111111]/95 border border-white/10 rounded-[28px] pointer-events-auto transition-all duration-500 ease-out shadow-2xl h-14 w-14 hover:w-48 flex items-center p-3.5 overflow-hidden group">
+        <div className="absolute bottom-[176px] left-6 z-50 bg-[#111111]/95 border border-white/10 rounded-[28px] pointer-events-auto transition-all duration-500 ease-out shadow-2xl h-14 w-14 hover:w-48 flex items-center p-3.5 overflow-hidden group">
           {/* Pulsing neon Activity icon always visible */}
           <div className="flex items-center justify-center shrink-0 w-7 h-7 bg-nike-volt/10 rounded-full">
             <Activity className="text-nike-volt animate-pulse" size={14} />
