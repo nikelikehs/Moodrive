@@ -21,7 +21,9 @@ export const Splash: React.FC = () => {
   }, [navigate]);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-[100dvh] bg-black text-white overflow-hidden relative font-sans">
+    <div className="min-h-screen bg-[#0a0a0a] flex justify-center items-center p-0 md:p-8 transition-colors duration-300">
+      <div className="w-full h-[100dvh] md:h-[844px] md:max-h-[100vh] max-w-[390px] bg-[#0a0a0a] md:rounded-[40px] border-none overflow-hidden relative flex flex-col transition-colors duration-300 shadow-none">
+        <div className="flex flex-col items-center justify-center w-full h-full bg-black text-white overflow-hidden relative font-sans">
       <div 
         className={cn(
           "flex flex-col items-center z-10 transition-all duration-1000 ease-out",
@@ -46,6 +48,8 @@ export const Splash: React.FC = () => {
       <div className="absolute bottom-12 flex flex-col items-center">
          <p className="text-[8px] font-black uppercase tracking-widest text-dark-muted">Engineered for Performance</p>
          <p className="text-[8px] font-black uppercase tracking-widest text-nike-volt mt-1">v2.0 NIKE_MATTE_EDITION</p>
+      </div>
+        </div>
       </div>
     </div>
   );

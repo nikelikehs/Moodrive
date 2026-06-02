@@ -329,7 +329,9 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-[100dvh] bg-[#0a0a0a] flex flex-col items-center justify-between p-10 font-sans relative overflow-hidden">
+    <div className="min-h-screen bg-[#0a0a0a] flex justify-center items-center p-0 md:p-8 transition-colors duration-300">
+      <div className="w-full h-[100dvh] md:h-[844px] md:max-h-[100vh] max-w-[390px] bg-[#0a0a0a] md:rounded-[40px] border-none overflow-hidden relative flex flex-col transition-colors duration-300 shadow-none">
+        <div className="w-full h-full bg-[#0a0a0a] flex flex-col items-center justify-between p-10 font-sans relative overflow-hidden">
       
       {/* Invisible Recaptcha Target */}
       <div id="recaptcha-container"></div>
@@ -567,6 +569,8 @@ export const Login: React.FC = () => {
         <p className="text-[9px] text-white/20 font-medium leading-relaxed max-w-[200px]">
           By continuing, you agree to our <span className="text-white/40 underline">Terms of Service</span> and <span className="text-white/40 underline">Privacy Policy</span>.
         </p>
+      </div>
+        </div>
       </div>
     </div>
   );

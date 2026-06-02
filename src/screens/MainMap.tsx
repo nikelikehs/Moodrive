@@ -128,6 +128,8 @@ export const MainMap: React.FC = () => {
   const [navInfo, setNavInfo] = useState({ distance: 0, duration: 0, toll: 0 });
   const [simSegment, setSimSegment] = useState<'TRANSIT' | 'COURSE' | 'NONE'>('NONE');
   const [transportMode, setTransportMode] = useState<'CAR' | 'BUS' | 'WALK' | 'BIKE'>('CAR');
+  const [currentSpeed, setCurrentSpeed] = useState<number>(0);
+  const [gpsSpeed, setGpsSpeed] = useState<number | null>(null);
 
   const [currentPos, setCurrentPos] = useState({ lat: 37.5665, lng: 126.9780 });
   const [searchQuery, setSearchQuery] = useState("");
@@ -265,6 +267,85 @@ export const MainMap: React.FC = () => {
 
     return () => clearInterval(interval);
   }, [cameraDistance, isNavigating, transportMode]);
+
+  // Speedometer geolocation watch and simulation logic
+  useEffect(() => {
+    if (!isNavigating) {
+      setGpsSpeed(null);
+      setCurrentSpeed(0);
+      return;
+    }
+
+    let watchId: number | null = null;
+    if (navigator.geolocation) {
+      watchId = navigator.geolocation.watchPosition(
+        (pos) => {
+          if (pos.coords.speed !== null && pos.coords.speed !== undefined && pos.coords.speed >= 0) {
+            const speedKmh = Math.round(pos.coords.speed * 3.6);
+            setGpsSpeed(speedKmh);
+          } else {
+            setGpsSpeed(null);
+          }
+        },
+        (err) => {
+          console.warn("Geolocation watch speed error:", err);
+          setGpsSpeed(null);
+        },
+        { enableHighAccuracy: true }
+      );
+    }
+
+    return () => {
+      if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+      }
+    };
+  }, [isNavigating]);
+
+  useEffect(() => {
+    if (!isNavigating) return;
+
+    const initialBase = transportMode === 'WALK' ? 5 : (transportMode === 'BUS' ? 45 : (transportMode === 'BIKE' ? 18 : 78));
+    setCurrentSpeed(initialBase);
+
+    const interval = setInterval(() => {
+      if (gpsSpeed !== null) {
+        setCurrentSpeed(gpsSpeed);
+        return;
+      }
+
+      setCurrentSpeed(() => {
+        let target = 0;
+        let variance = 1;
+        if (transportMode === 'WALK') {
+          target = 5;
+          variance = 0.5;
+        } else if (transportMode === 'BUS') {
+          target = 45;
+          variance = 2;
+        } else if (transportMode === 'BIKE') {
+          target = 18;
+          variance = 1.5;
+        } else {
+          // CAR mode
+          if (cameraDistance !== null && cameraDistance < 200) {
+            target = cameraLimit - 4;
+            variance = 1;
+          } else {
+            target = 78;
+            variance = 3;
+          }
+        }
+
+        const delta = (Math.random() - 0.5) * variance * 2;
+        let nextSpeed = Math.round(target + delta);
+        if (nextSpeed < 0) nextSpeed = 0;
+        return nextSpeed;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isNavigating, transportMode, cameraDistance, cameraLimit, gpsSpeed]);
 
   const [loading] = useKakaoLoader({
     appkey: "338f0930685d328dadea60e03f7907a8",
@@ -1701,6 +1782,25 @@ export const MainMap: React.FC = () => {
                 </div>
               )}
            </div>
+        </div>
+      )}
+
+      {isNavigating && (
+        <div className={cn(
+          "absolute bottom-[248px] left-6 z-[70] w-20 h-20 rounded-full flex flex-col items-center justify-center transition-all duration-300 shadow-2xl border-2 backdrop-blur-xl select-none",
+          (cameraDistance !== null && currentSpeed > cameraLimit)
+            ? "bg-red-600/90 border-red-500 animate-pulse text-white"
+            : "bg-[#111111]/90 border-white/15 text-white"
+        )}>
+          <span className="text-2xl font-black italic tracking-tighter leading-none mt-1">
+            {currentSpeed}
+          </span>
+          <span className={cn(
+            "text-[7px] font-black tracking-widest uppercase mt-1",
+            (cameraDistance !== null && currentSpeed > cameraLimit) ? "text-white" : "text-white/40"
+          )}>
+            {(cameraDistance !== null && currentSpeed > cameraLimit) ? "SLOW" : "km/h"}
+          </span>
         </div>
       )}
 
