@@ -688,6 +688,7 @@ export const MainMap: React.FC = () => {
   }, [isRightSidebarOpen, currentPos.lat, currentPos.lng, fetchNearbyRecommendations]);
 
   const lastQueryRef = useRef<string | null>(null);
+  const followUpTimeoutRef = useRef<any>(null);
 
   useEffect(() => {
     const query = searchParams.get('search');
@@ -865,11 +866,18 @@ export const MainMap: React.FC = () => {
   useEffect(() => {
     return () => {
       voiceService.stopListening();
+      if (followUpTimeoutRef.current) {
+        clearTimeout(followUpTimeoutRef.current);
+      }
     };
   }, []);
 
   const triggerVoiceAssistant = () => {
     if (aiStatus === 'LISTENING' || aiStatus === 'THINKING') {
+      if (followUpTimeoutRef.current) {
+        clearTimeout(followUpTimeoutRef.current);
+        followUpTimeoutRef.current = null;
+      }
       voiceService.stopListening();
       setAiStatus('STANDBY');
       return;
@@ -886,7 +894,18 @@ export const MainMap: React.FC = () => {
     if (aiStatus === 'LISTENING' || aiStatus === 'THINKING') return;
     voiceService.listen((text) => {
       const lowerText = text.toLowerCase();
-      if (lowerText.includes('hk') || lowerText.includes('에이치케이')) {
+      if (
+        lowerText.includes('hk') || 
+        lowerText.includes('에이치케이') || 
+        lowerText.includes('에이치 케이') || 
+        lowerText.includes('hk야') || 
+        lowerText.includes('에이치케이야') || 
+        lowerText.includes('에이치 케이야')
+      ) {
+        if (followUpTimeoutRef.current) {
+          clearTimeout(followUpTimeoutRef.current);
+          followUpTimeoutRef.current = null;
+        }
         setAiStatus('READY');
         voiceService.speak("네, 어디로 안내할까요?");
         setTimeout(() => {
@@ -898,6 +917,11 @@ export const MainMap: React.FC = () => {
   };
 
   const handleGenAIResponse = async (userText: string) => {
+    if (followUpTimeoutRef.current) {
+      clearTimeout(followUpTimeoutRef.current);
+      followUpTimeoutRef.current = null;
+    }
+
     setAiStatus('THINKING');
     voiceService.stopListening(); // Stop microphone listening while the assistant responds
     try {
@@ -914,10 +938,20 @@ export const MainMap: React.FC = () => {
           handleSearch(dest);
         }
       }
-      setAiStatus('READY');
     } catch (error) {
-      setAiStatus('READY');
+      console.error(error);
     }
+
+    // Now, keep mic active for 3 seconds for follow-up conversation
+    setTimeout(() => {
+      setAiStatus('LISTENING');
+      voiceService.listen(handleGenAIResponse);
+
+      followUpTimeoutRef.current = setTimeout(() => {
+        setAiStatus('STANDBY');
+        voiceService.stopListening();
+      }, 3000);
+    }, 1500);
   };
 
   const handleSearch = (query: string, isCategory = false) => {
