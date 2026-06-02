@@ -24,7 +24,8 @@ import {
   LogOut,
   Train,
   Car,
-  Compass
+  Compass,
+  Shield
 } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Map, CustomOverlayMap, useKakaoLoader, Polyline } from 'react-kakao-maps-sdk';
@@ -130,6 +131,7 @@ export const MainMap: React.FC = () => {
   const [transportMode, setTransportMode] = useState<'CAR' | 'BUS' | 'WALK' | 'BIKE'>('CAR');
   const [currentSpeed, setCurrentSpeed] = useState<number>(0);
   const [gpsSpeed, setGpsSpeed] = useState<number | null>(null);
+  const [isSafetyDriveMode, setIsSafetyDriveMode] = useState(false);
 
   const [currentPos, setCurrentPos] = useState({ lat: 37.5665, lng: 126.9780 });
   const [searchQuery, setSearchQuery] = useState("");
@@ -305,7 +307,7 @@ export const MainMap: React.FC = () => {
   useEffect(() => {
     if (!isNavigating) return;
 
-    const initialBase = transportMode === 'WALK' ? 5 : (transportMode === 'BUS' ? 45 : (transportMode === 'BIKE' ? 18 : 78));
+    const initialBase = isSafetyDriveMode ? 0 : (transportMode === 'WALK' ? 5 : (transportMode === 'BUS' ? 45 : (transportMode === 'BIKE' ? 18 : 78)));
     setCurrentSpeed(initialBase);
 
     const interval = setInterval(() => {
@@ -314,7 +316,7 @@ export const MainMap: React.FC = () => {
         return;
       }
 
-      setCurrentSpeed(() => {
+      setCurrentSpeed((prevSpeed) => {
         let target = 0;
         let variance = 1;
         if (transportMode === 'WALK') {
@@ -337,6 +339,12 @@ export const MainMap: React.FC = () => {
           }
         }
 
+        // If in Safety Drive Mode, simulate acceleration from 0 km/h
+        if (isSafetyDriveMode && prevSpeed < target - 5) {
+          const accel = Math.round(8 + Math.random() * 4);
+          return prevSpeed + accel;
+        }
+
         const delta = (Math.random() - 0.5) * variance * 2;
         let nextSpeed = Math.round(target + delta);
         if (nextSpeed < 0) nextSpeed = 0;
@@ -345,7 +353,7 @@ export const MainMap: React.FC = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isNavigating, transportMode, cameraDistance, cameraLimit, gpsSpeed]);
+  }, [isNavigating, transportMode, cameraDistance, cameraLimit, gpsSpeed, isSafetyDriveMode]);
 
   const [loading] = useKakaoLoader({
     appkey: "338f0930685d328dadea60e03f7907a8",
@@ -359,6 +367,14 @@ export const MainMap: React.FC = () => {
       });
     }
   }, []);
+
+  const startSafetyDrive = () => {
+    setIsSafetyDriveMode(true);
+    setTransportMode('CAR');
+    setDestination("안전운행 안내");
+    setIsNavigating(true);
+    voiceService.speak("안전운행 안내를 시작합니다. 실시간 단속 정보를 안내합니다.");
+  };
 
   const handleLogout = async () => {
     try {
@@ -737,6 +753,7 @@ export const MainMap: React.FC = () => {
             // Finish navigation when within 20m of course end
             if (distToEnd < 0.02) {
               setIsNavigating(false);
+              setIsSafetyDriveMode(false);
               setSimSegment('NONE');
               setPolylinePath([]);
               setCoursePolylinePath([]);
@@ -753,6 +770,7 @@ export const MainMap: React.FC = () => {
           // Finish navigation when within 20m of destination
           if (distToTarget < 0.02) {
             setIsNavigating(false);
+            setIsSafetyDriveMode(false);
             setPolylinePath([]);
             voiceService.speak(transportMode === 'WALK' ? "목적지에 도착하여 도보 안내를 종료합니다. 수고하셨습니다." : "목적지에 도착하여 경로 안내를 종료합니다. 안전 운전해 주셔서 감사합니다.");
           }
@@ -1063,6 +1081,18 @@ export const MainMap: React.FC = () => {
         >
           <Navigation size={26} className="fill-none" />
         </button>
+
+        {/* Safety Drive Button (Naver Map style) */}
+        {!isNavigating && (
+          <button 
+            onClick={startSafetyDrive}
+            className="absolute right-6 w-14 h-14 bg-[#111111]/90 backdrop-blur-xl border border-white/10 rounded-2xl flex flex-col items-center justify-center z-[70] active:scale-90 transition-all text-nike-volt bottom-[184px]"
+            title="안전주행 모드"
+          >
+            <Shield size={20} className="fill-nike-volt/10" />
+            <span className="text-[7px] font-black tracking-tighter uppercase mt-1 text-white/80">안전주행</span>
+          </button>
+        )}
       </div>
 
       {/* Naver Map Style TBT Instruction Card (Only during Navigation) */}
@@ -1072,14 +1102,18 @@ export const MainMap: React.FC = () => {
             <>
               <div className="bg-black/95 border border-white/10 rounded-[32px] p-6 flex items-center gap-6">
                 <div className="w-16 h-16 bg-nike-volt rounded-2xl flex items-center justify-center flex-shrink-0">
-                   <ArrowLeft size={32} className="text-black -rotate-90" />
+                   {isSafetyDriveMode ? (
+                     <Shield size={32} className="text-black fill-black/10" />
+                   ) : (
+                     <ArrowLeft size={32} className="text-black -rotate-90" />
+                   )}
                 </div>
                 <div className="flex-1">
                   <div className="text-nike-volt font-black italic text-3xl tracking-tighter leading-none mb-1">
-                    250<span className="text-sm ml-1 uppercase">m</span>
+                    {isSafetyDriveMode ? "안전" : "250m"}
                   </div>
                   <div className="text-white font-black italic text-lg uppercase tracking-tight">
-                    {destination || "NEXT TURN"}
+                    {isSafetyDriveMode ? "규정 속도를 준수하세요" : (destination || "NEXT TURN")}
                   </div>
                 </div>
               </div>
@@ -1839,7 +1873,13 @@ export const MainMap: React.FC = () => {
               </div>
             </div>
             <button 
-              onClick={() => { setIsNavigating(false); setPolylinePath([]); setCoursePolylinePath([]); setSimSegment('NONE'); }} 
+              onClick={() => { 
+                setIsNavigating(false); 
+                setIsSafetyDriveMode(false); 
+                setPolylinePath([]); 
+                setCoursePolylinePath([]); 
+                setSimSegment('NONE'); 
+              }} 
               className={cn(
                 "w-10 h-10 rounded-xl flex items-center justify-center ml-2",
                 transportMode === 'CAR' ? "bg-black/10 text-black" : "bg-white/10 text-white"
@@ -1857,9 +1897,9 @@ export const MainMap: React.FC = () => {
                 {transportMode === 'WALK' ? 'Remaining Steps' : 'Remaining Distance'}
               </span>
               <span className={cn("text-lg font-black italic leading-none mt-0.5", transportMode === 'CAR' ? "text-black" : "text-white")}>
-                {transportMode === 'WALK' 
+                {isSafetyDriveMode ? '실시간 측정' : (transportMode === 'WALK' 
                   ? `${Math.round(navInfo.distance * 1350).toLocaleString()} steps` 
-                  : `${navInfo.distance.toFixed(1)} KM`}
+                  : `${navInfo.distance.toFixed(1)} KM`)}
               </span>
             </div>
             
@@ -1868,7 +1908,7 @@ export const MainMap: React.FC = () => {
                 Remaining Time
               </span>
               <span className={cn("text-lg font-black italic leading-none mt-0.5", transportMode === 'CAR' ? "text-black" : "text-white")}>
-                {navInfo.duration} <span className="text-xs">MIN</span>
+                {isSafetyDriveMode ? '주행 중' : `${navInfo.duration} MIN`}
               </span>
             </div>
 
@@ -1878,7 +1918,7 @@ export const MainMap: React.FC = () => {
                   Toll Fee
                 </span>
                 <span className="text-sm font-black italic mt-1 text-black">
-                  {(navInfo as any).toll > 0 ? `${(navInfo as any).toll.toLocaleString()}원` : '무료'}
+                  {isSafetyDriveMode ? '실시간 수집' : (((navInfo as any).toll > 0 ? `${(navInfo as any).toll.toLocaleString()}원` : '무료'))}
                 </span>
               </div>
             )}
