@@ -1335,15 +1335,27 @@ export const MainMap: React.FC = () => {
                         {cameraLimit}
                       </div>
                     ) : (
-                      <Shield size={18} className="text-black fill-black/10" />
+                      destination !== "안전운행 안내" ? (
+                        <ArrowLeft size={18} className="text-black -rotate-90" />
+                      ) : (
+                        <Shield size={18} className="text-black fill-black/10" />
+                      )
                     )}
                   </div>
                   <div className="flex-1 min-w-0 text-left">
                     <div className="text-nike-volt font-black italic text-xs tracking-tight leading-none mb-0.5">
-                      {cameraDistance !== null ? `⚠️ 신호·과속 단속 ${cameraDistance}m 전방` : `🟢 ${trafficStatus}`}
+                      {cameraDistance !== null 
+                        ? `⚠️ 신호·과속 단속 ${cameraDistance}m 전방` 
+                        : (destination !== "안전운행 안내" 
+                            ? `🟢 250m 앞 회전 (목적지 방향)` 
+                            : `🟢 ${trafficStatus}`)}
                     </div>
                     <div className="text-white/60 font-bold text-[10px] tracking-tight truncate">
-                      {cameraDistance !== null ? `규정속도 ${cameraLimit}km/h 제한 구간` : "실시간 단속 및 교통정보 안내 중"}
+                      {cameraDistance !== null 
+                        ? `규정속도 ${cameraLimit}km/h 제한 구간` 
+                        : (destination !== "안전운행 안내" 
+                            ? `${destination} 안내 중` 
+                            : "실시간 단속 및 교통정보 안내 중")}
                     </div>
                   </div>
                 </div>
@@ -2038,6 +2050,12 @@ export const MainMap: React.FC = () => {
                       setIsNavigating(true);
                       setSimSegment('TRANSIT');
 
+                      if (transportMode === 'CAR') {
+                        setIsSafetyDriveMode(true);
+                      } else {
+                        setIsSafetyDriveMode(false);
+                      }
+
                       if (coursePolylinePath.length > 0) {
                         if (transportMode === 'WALK') {
                           voiceService.speak("추천 도보 산책 코스 안내를 시작합니다. 먼저 코스 시작점까지 안내합니다.");
@@ -2176,7 +2194,7 @@ export const MainMap: React.FC = () => {
                 {transportMode === 'WALK' ? 'Remaining Steps' : 'Remaining Distance'}
               </span>
               <span className={cn("text-lg font-black italic leading-none mt-0.5", transportMode === 'CAR' ? "text-black" : "text-white")}>
-                {isSafetyDriveMode ? '실시간 측정' : (transportMode === 'WALK' 
+                {(isSafetyDriveMode && destination === "안전운행 안내") ? '실시간 측정' : (transportMode === 'WALK' 
                   ? `${Math.round(navInfo.distance * 1350).toLocaleString()} steps` 
                   : `${navInfo.distance.toFixed(1)} KM`)}
               </span>
@@ -2187,7 +2205,7 @@ export const MainMap: React.FC = () => {
                 Remaining Time
               </span>
               <span className={cn("text-lg font-black italic leading-none mt-0.5", transportMode === 'CAR' ? "text-black" : "text-white")}>
-                {isSafetyDriveMode ? '주행 중' : `${navInfo.duration} MIN`}
+                {(isSafetyDriveMode && destination === "안전운행 안내") ? '주행 중' : `${navInfo.duration} MIN`}
               </span>
             </div>
 
@@ -2197,7 +2215,7 @@ export const MainMap: React.FC = () => {
                   Toll Fee
                 </span>
                 <span className="text-sm font-black italic mt-1 text-black">
-                  {isSafetyDriveMode ? '실시간 수집' : (((navInfo as any).toll > 0 ? `${(navInfo as any).toll.toLocaleString()}원` : '무료'))}
+                  {(isSafetyDriveMode && destination === "안전운행 안내") ? '실시간 수집' : (((navInfo as any).toll > 0 ? `${(navInfo as any).toll.toLocaleString()}원` : '무료'))}
                 </span>
               </div>
             )}
