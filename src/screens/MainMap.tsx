@@ -132,6 +132,8 @@ export const MainMap: React.FC = () => {
   const [currentSpeed, setCurrentSpeed] = useState<number>(0);
   const [gpsSpeed, setGpsSpeed] = useState<number | null>(null);
   const [isSafetyDriveMode, setIsSafetyDriveMode] = useState(false);
+  const [isOnHighway, setIsOnHighway] = useState(false);
+  const [trafficStatus, setTrafficStatus] = useState("교통 상황 원활");
 
   const [currentPos, setCurrentPos] = useState({ lat: 37.5665, lng: 126.9780 });
   const [searchQuery, setSearchQuery] = useState("");
@@ -355,6 +357,52 @@ export const MainMap: React.FC = () => {
     return () => clearInterval(interval);
   }, [isNavigating, transportMode, cameraDistance, cameraLimit, gpsSpeed, isSafetyDriveMode]);
 
+  // Highway state detection and voice feedback
+  useEffect(() => {
+    if (!isNavigating) {
+      setIsOnHighway(false);
+      return;
+    }
+
+    if (isSafetyDriveMode) {
+      if (currentSpeed >= 70 && !isOnHighway) {
+        setIsOnHighway(true);
+        voiceService.speak("고속도로 요금소에 진입했습니다. 통행료 실시간 수집을 시작합니다.");
+      } else if (currentSpeed < 45 && isOnHighway) {
+        setIsOnHighway(false);
+        voiceService.speak("고속도로 주행을 완료하고 일반 도로로 진입했습니다.");
+      }
+    } else {
+      setIsOnHighway(navInfo.toll > 0);
+    }
+  }, [currentSpeed, isSafetyDriveMode, isNavigating, navInfo.toll, isOnHighway]);
+
+  // Traffic status simulation loop in Safety Drive Mode
+  useEffect(() => {
+    if (!isSafetyDriveMode || !isNavigating) return;
+
+    const statuses = [
+      "교통 상황 원활",
+      "전방 소통 원활",
+      "실시간 도로 상황 수집 중",
+      "교통 흐름 원활",
+      "안전 규정속도를 준수하세요"
+    ];
+
+    const interval = setInterval(() => {
+      setTrafficStatus(() => {
+        const currentIdx = statuses.indexOf(trafficStatus);
+        let nextIdx = Math.floor(Math.random() * statuses.length);
+        if (nextIdx === currentIdx) {
+          nextIdx = (nextIdx + 1) % statuses.length;
+        }
+        return statuses[nextIdx];
+      });
+    }, 10000); // changes every 10 seconds
+
+    return () => clearInterval(interval);
+  }, [isSafetyDriveMode, isNavigating, trafficStatus]);
+
   const [loading] = useKakaoLoader({
     appkey: "338f0930685d328dadea60e03f7907a8",
     libraries: ["services", "clusterer", "drawing"],
@@ -372,6 +420,10 @@ export const MainMap: React.FC = () => {
     setIsSafetyDriveMode(true);
     setTransportMode('CAR');
     setDestination("안전운행 안내");
+    setSearchResults([]);
+    setSelectedPlace(null);
+    setSearchQuery("");
+    setIsRightSidebarOpen(false);
     setIsNavigating(true);
     voiceService.speak("안전운행 안내를 시작합니다. 실시간 단속 정보를 안내합니다.");
   };
@@ -957,21 +1009,25 @@ export const MainMap: React.FC = () => {
   const handleSearch = (query: string, isCategory = false) => {
     if (!query) return;
     
-    setSelectedPlace(null);
-    setDestination("");
-    setPolylinePath([]);
-    setCoursePolylinePath([]);
-    setNavInfo({ distance: 0, duration: 0, toll: 0 });
+    if (!isSafetyDriveMode) {
+      setSelectedPlace(null);
+      setDestination("");
+      setPolylinePath([]);
+      setCoursePolylinePath([]);
+      setNavInfo({ distance: 0, duration: 0, toll: 0 });
 
-    // Intercept search if it matches a curated drive course
-    const courseKey = Object.keys(COURSE_PATHS).find(k => 
-      query.toLowerCase().includes(k.toLowerCase()) || 
-      k.toLowerCase().includes(query.toLowerCase())
-    );
-    if (courseKey && !isCategory) {
-      const course = COURSE_PATHS[courseKey];
-      startCourseNavigation(courseKey, course);
-      return;
+      // Intercept search if it matches a curated drive course
+      const courseKey = Object.keys(COURSE_PATHS).find(k => 
+        query.toLowerCase().includes(k.toLowerCase()) || 
+        k.toLowerCase().includes(query.toLowerCase())
+      );
+      if (courseKey && !isCategory) {
+        const course = COURSE_PATHS[courseKey];
+        startCourseNavigation(courseKey, course);
+        return;
+      }
+    } else {
+      setSelectedPlace(null);
     }
 
     const ps = new kakao.maps.services.Places();
@@ -1091,6 +1147,34 @@ export const MainMap: React.FC = () => {
               )}
             </div>
           </CustomOverlayMap>
+
+          {/* Custom Overlay Pins for search results in Safety Driving Mode */}
+          {isSafetyDriveMode && searchResults.map((place, idx) => (
+            <CustomOverlayMap 
+              key={place.id || idx} 
+              position={{ lat: parseFloat(place.y), lng: parseFloat(place.x) }}
+              yAnchor={1.25}
+            >
+              <button 
+                onClick={() => {
+                  setSelectedPlace(place);
+                  setIsRightSidebarOpen(true);
+                  if (map) {
+                    map.panTo(new kakao.maps.LatLng(parseFloat(place.y), parseFloat(place.x)));
+                  }
+                }}
+                className={cn(
+                  "px-3 py-1.5 rounded-xl text-[10px] font-black tracking-tight flex items-center gap-1.5 shadow-2xl backdrop-blur-xl hover:scale-105 active:scale-95 transition-all border pointer-events-auto",
+                  selectedPlace?.id === place.id
+                    ? "bg-nike-volt text-black border-nike-volt"
+                    : "bg-[#111111]/95 text-white border-white/10 hover:border-nike-volt/30"
+                )}
+              >
+                <MapPin size={11} className={selectedPlace?.id === place.id ? "text-black fill-black/10" : "text-nike-volt fill-nike-volt/10"} />
+                <span>{place.place_name}</span>
+              </button>
+            </CustomOverlayMap>
+          ))}
         </Map>
 
         {/* Voice Recognition Trigger Button */}
@@ -1127,6 +1211,18 @@ export const MainMap: React.FC = () => {
             <span className="text-[7px] font-black tracking-tighter uppercase mt-1 text-white/80">안전주행</span>
           </button>
         )}
+
+        {/* Nearby Search Button in Safety Driving Mode */}
+        {isSafetyDriveMode && (
+          <button 
+            onClick={() => setIsRightSidebarOpen(true)}
+            className="absolute right-6 w-14 h-14 bg-[#111111]/90 backdrop-blur-xl border border-white/10 rounded-2xl flex flex-col items-center justify-center z-[70] active:scale-90 transition-all text-nike-volt bottom-[184px] hover:border-nike-volt/40 animate-in fade-in zoom-in duration-300"
+            title="주변 검색"
+          >
+            <Compass size={20} className="text-nike-volt transition-transform duration-500 hover:rotate-180" />
+            <span className="text-[7px] font-black tracking-tighter uppercase mt-1 text-white/80">주변 검색</span>
+          </button>
+        )}
       </div>
 
       {/* Naver Map Style TBT Instruction Card (Only during Navigation) */}
@@ -1134,25 +1230,53 @@ export const MainMap: React.FC = () => {
         <div className="absolute top-12 left-6 right-6 z-[100] animate-in slide-in-from-top-10 duration-500">
           {transportMode === 'CAR' && (
             <>
-              <div className="bg-black/95 border border-white/10 rounded-[32px] p-6 flex items-center gap-6">
-                <div className="w-16 h-16 bg-nike-volt rounded-2xl flex items-center justify-center flex-shrink-0">
-                   {isSafetyDriveMode ? (
-                     <Shield size={32} className="text-black fill-black/10" />
-                   ) : (
+              {isSafetyDriveMode ? (
+                /* Compact unified Safety Drive HUD card */
+                <div className={cn(
+                  "border rounded-xl py-2.5 px-3.5 flex items-center gap-3 shadow-2xl transition-all duration-300 mx-auto max-w-[340px]",
+                  cameraDistance !== null 
+                    ? "bg-gradient-to-r from-red-950/95 to-black/95 border-red-500/40" 
+                    : "bg-black/95 border-white/10"
+                )}>
+                  <div className={cn(
+                    "w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0",
+                    cameraDistance !== null ? "bg-white" : "bg-nike-volt"
+                  )}>
+                    {cameraDistance !== null ? (
+                      <div className="w-7 h-7 rounded-full bg-white border-[2.5px] border-red-600 flex items-center justify-center font-black text-black text-[10px] shrink-0 shadow-md">
+                        {cameraLimit}
+                      </div>
+                    ) : (
+                      <Shield size={18} className="text-black fill-black/10" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0 text-left">
+                    <div className="text-nike-volt font-black italic text-xs tracking-tight leading-none mb-0.5">
+                      {cameraDistance !== null ? `⚠️ 신호·과속 단속 ${cameraDistance}m 전방` : `🟢 ${trafficStatus}`}
+                    </div>
+                    <div className="text-white/60 font-bold text-[10px] tracking-tight truncate">
+                      {cameraDistance !== null ? `규정속도 ${cameraLimit}km/h 제한 구간` : "실시간 단속 및 교통정보 안내 중"}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* Regular TBT navigation card */
+                <div className="bg-black/95 border border-white/10 rounded-[32px] p-6 flex items-center gap-6">
+                  <div className="w-16 h-16 bg-nike-volt rounded-2xl flex items-center justify-center flex-shrink-0">
                      <ArrowLeft size={32} className="text-black -rotate-90" />
-                   )}
-                </div>
-                <div className="flex-1">
-                  <div className="text-nike-volt font-black italic text-3xl tracking-tighter leading-none mb-1">
-                    {isSafetyDriveMode ? "안전" : "250m"}
                   </div>
-                  <div className="text-white font-black italic text-lg uppercase tracking-tight">
-                    {isSafetyDriveMode ? "규정 속도를 준수하세요" : (destination || "NEXT TURN")}
+                  <div className="flex-1">
+                    <div className="text-nike-volt font-black italic text-3xl tracking-tighter leading-none mb-1">
+                      250<span className="text-sm ml-1 uppercase">m</span>
+                    </div>
+                    <div className="text-white font-black italic text-lg uppercase tracking-tight">
+                      {destination || "NEXT TURN"}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
-              {cameraDistance !== null && (
+              {cameraDistance !== null && !isSafetyDriveMode && (
                 <div className="bg-red-950/90 border border-red-500/30 rounded-[24px] p-4 flex items-center justify-between mt-3 shadow-2xl animate-in slide-in-from-top-4 duration-300">
                   <div className="flex items-center gap-3">
                     <div className="w-11 h-11 rounded-full bg-white border-[3.5px] border-red-600 flex items-center justify-center font-black text-black text-[15px] shrink-0 shadow-lg">
@@ -1215,7 +1339,7 @@ export const MainMap: React.FC = () => {
       )}
 
       {/* Naver Map Style Highway Mode HUD / Transit Stops HUD / Walk Health HUD (Only during Navigation) */}
-      {isNavigating && transportMode === 'CAR' && (
+      {isNavigating && transportMode === 'CAR' && !isSafetyDriveMode && (
         <div className="absolute right-6 top-[156px] z-[80] w-56 bg-black/95 backdrop-blur-xl border border-white/10 rounded-[32px] p-5 flex flex-col max-h-[38vh] overflow-y-auto no-scrollbar shadow-2xl animate-in slide-in-from-right-10 duration-500">
           <div className="flex items-center justify-between mb-3 border-b border-white/5 pb-2 shrink-0">
             <span className="text-[10px] font-black text-nike-volt tracking-widest uppercase">Highway Mode</span>
@@ -1380,7 +1504,133 @@ export const MainMap: React.FC = () => {
             <div className="w-8 h-8 border-2 border-nike-volt/20 border-t-nike-volt rounded-full animate-spin" />
             <span className="text-[9px] font-black text-white/40 tracking-widest uppercase animate-pulse">실시간 주변 탐색 중...</span>
           </div>
+        ) : isSafetyDriveMode ? (
+          /* Sidebar Search & Amenities for Safety Driving Mode */
+          <div className="flex-1 flex flex-col overflow-hidden animate-in fade-in duration-300">
+            {/* 1. Sidebar Search Box */}
+            <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-2xl px-3 py-2.5 mb-4 shrink-0 focus-within:border-nike-volt/40 transition-colors pointer-events-auto">
+              <Search className="text-white/40" size={16} />
+              <input 
+                type="text" 
+                placeholder="주변 검색어 입력..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch(searchQuery)}
+                className="bg-transparent border-none outline-none text-white text-xs flex-1 placeholder:text-white/20 uppercase font-black tracking-tight"
+              />
+              {searchQuery && (
+                <button onClick={() => { setSearchQuery(""); setSearchResults([]); setSelectedPlace(null); }} className="text-white/40 hover:text-white shrink-0">
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+
+            {/* 2. Sidebar Category Selectors */}
+            <div className="grid grid-cols-3 gap-2 mb-6 shrink-0 pointer-events-auto">
+              {[
+                { id: 'fuel', icon: Fuel, label: '주유소', query: '주유소' },
+                { id: 'food', icon: Utensils, label: '식당', query: '맛집' },
+                { id: 'hotel', icon: Bed, label: '숙소', query: '호텔' },
+              ].map((cat) => (
+                <button 
+                  key={cat.id} 
+                  onClick={() => {
+                    setSearchQuery(cat.query);
+                    handleSearch(cat.query, true);
+                  }}
+                  className={cn(
+                    "flex flex-col items-center justify-center bg-white/5 border p-3 rounded-2xl transition-all text-white hover:text-nike-volt active:scale-95 shrink-0",
+                    searchQuery === cat.query ? "border-nike-volt/40 bg-nike-volt/5" : "border-white/5"
+                  )}
+                >
+                  <cat.icon size={16} className="text-nike-volt" />
+                  <span className="text-[9px] font-black tracking-tight mt-1">{cat.label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* 3. Search Results List */}
+            <div className="flex-1 overflow-y-auto no-scrollbar space-y-4 pr-1">
+              <div className="flex items-center justify-between border-b border-white/5 pb-1">
+                <span className="text-[10px] font-black text-white/50 uppercase tracking-widest">검색 결과 ({searchResults.length})</span>
+                {searchResults.length > 0 && (
+                  <button 
+                    onClick={() => {
+                      setSearchResults([]);
+                      setSelectedPlace(null);
+                      setSearchQuery("");
+                    }} 
+                    className="text-[9px] font-bold text-red-500/60 hover:text-red-500 uppercase tracking-tight"
+                  >
+                    초기화
+                  </button>
+                )}
+              </div>
+
+              {searchResults.length === 0 ? (
+                <div className="py-16 flex flex-col items-center justify-center gap-2 text-white/20">
+                  <Compass size={24} className="text-white/25 animate-pulse" />
+                  <span className="text-[10px] font-black uppercase tracking-tight text-center">주변 검색 또는 카테고리 선택</span>
+                </div>
+              ) : (
+                <div className="space-y-2 pointer-events-auto">
+                  {searchResults.map((place, idx) => {
+                    const formatDistance = (mStr: string) => {
+                      const m = parseInt(mStr);
+                      if (isNaN(m)) return mStr;
+                      if (m < 1000) return `${m}m`;
+                      return `${(m / 1000).toFixed(1)}km`;
+                    };
+
+                    return (
+                      <div 
+                        key={place.id || idx}
+                        className={cn(
+                          "w-full p-3 border transition-all text-left flex flex-col gap-1.5 cursor-pointer rounded-2xl",
+                          selectedPlace?.id === place.id
+                            ? "bg-nike-volt/10 border-nike-volt/30 text-white"
+                            : "bg-white/5 border-white/5 text-white hover:border-white/10"
+                        )}
+                        onClick={() => {
+                          setSelectedPlace(place);
+                          if (map) {
+                            map.panTo(new kakao.maps.LatLng(parseFloat(place.y), parseFloat(place.x)));
+                          }
+                        }}
+                      >
+                        <div className="flex justify-between items-start gap-1">
+                          <h4 className="text-xs font-black truncate leading-tight">{place.place_name}</h4>
+                          <span className="text-[9px] font-mono text-nike-volt shrink-0 font-bold leading-none">
+                            {place.distance ? formatDistance(place.distance) : ''}
+                          </span>
+                        </div>
+                        <p className="text-[9px] text-white/40 font-bold truncate leading-none">
+                          {place.road_address_name || place.address_name}
+                        </p>
+                        
+                        {selectedPlace?.id === place.id && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setIsSafetyDriveMode(false);
+                              selectPlace(place);
+                              setIsRightSidebarOpen(false);
+                            }}
+                            className="mt-1 w-full bg-nike-volt text-black py-2 rounded-xl text-[10px] font-black italic uppercase tracking-tighter hover:scale-[1.02] active:scale-95 transition-transform flex items-center justify-center gap-1"
+                          >
+                            <Navigation2 size={10} className="fill-black" />
+                            목적지로 안내 시작
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
         ) : (
+          /* Original recommendations list */
           <div className="flex-1 overflow-y-auto no-scrollbar space-y-5 pr-1">
             {[
               { key: 'fuel', title: '⛽ 주유소', icon: Fuel },
@@ -1924,7 +2174,7 @@ export const MainMap: React.FC = () => {
           </div>
           <div className={cn(
             "grid rounded-2xl px-4 py-2 border gap-2",
-            transportMode === 'CAR' ? "grid-cols-3 bg-black/5 border-black/5" : "grid-cols-2 bg-white/5 border-white/5"
+            (transportMode === 'CAR' && isOnHighway) ? "grid-cols-3 bg-black/5 border-black/5" : "grid-cols-2 bg-white/5 border-white/5"
           )}>
             <div className="flex flex-col text-left">
               <span className={cn("text-[8px] font-black uppercase", transportMode === 'CAR' ? "text-black/40" : "text-white/30")}>
@@ -1946,7 +2196,7 @@ export const MainMap: React.FC = () => {
               </span>
             </div>
 
-            {transportMode === 'CAR' && (
+            {transportMode === 'CAR' && isOnHighway && (
               <div className="flex flex-col text-left border-l pl-3 border-black/10">
                 <span className="text-[8px] font-black uppercase text-black/40">
                   Toll Fee
