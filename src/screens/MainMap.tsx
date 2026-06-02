@@ -365,7 +365,11 @@ export const MainMap: React.FC = () => {
       return;
     }
 
-    if (isSafetyDriveMode) {
+    if (destination && destination !== "안전운행 안내") {
+      // Destination navigation: only activate highway HUD for real highway routes (toll >= 1000, distance >= 10km)
+      setIsOnHighway(navInfo.toll >= 1000 && navInfo.distance >= 10);
+    } else {
+      // Raw Safety Driving Mode without destination: simulate via speed
       if (currentSpeed >= 70 && !isOnHighway) {
         setIsOnHighway(true);
         voiceService.speak("고속도로 요금소에 진입했습니다. 통행료 실시간 수집을 시작합니다.");
@@ -373,10 +377,8 @@ export const MainMap: React.FC = () => {
         setIsOnHighway(false);
         voiceService.speak("고속도로 주행을 완료하고 일반 도로로 진입했습니다.");
       }
-    } else {
-      setIsOnHighway(navInfo.toll > 0);
     }
-  }, [currentSpeed, isSafetyDriveMode, isNavigating, navInfo.toll, isOnHighway]);
+  }, [currentSpeed, isSafetyDriveMode, isNavigating, navInfo.toll, navInfo.distance, destination, isOnHighway]);
 
   // Traffic status simulation loop in Safety Drive Mode
   useEffect(() => {
