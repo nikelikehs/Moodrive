@@ -134,6 +134,7 @@ export const MainMap: React.FC = () => {
   const [isSafetyDriveMode, setIsSafetyDriveMode] = useState(false);
   const [isOnHighway, setIsOnHighway] = useState(false);
   const [trafficStatus, setTrafficStatus] = useState("교통 상황 원활");
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
   const [currentPos, setCurrentPos] = useState({ lat: 37.5665, lng: 126.9780 });
   const [searchQuery, setSearchQuery] = useState("");
@@ -1158,7 +1159,6 @@ export const MainMap: React.FC = () => {
               <button 
                 onClick={() => {
                   setSelectedPlace(place);
-                  setIsRightSidebarOpen(true);
                   if (map) {
                     map.panTo(new kakao.maps.LatLng(parseFloat(place.y), parseFloat(place.x)));
                   }
@@ -1178,27 +1178,31 @@ export const MainMap: React.FC = () => {
         </Map>
 
         {/* Voice Recognition Trigger Button */}
-        <button 
-          onClick={triggerVoiceAssistant}
-          className={cn(
-            "absolute right-6 w-14 h-14 rounded-2xl flex items-center justify-center z-[70] active:scale-90 transition-all bottom-[328px]",
-            aiStatus === 'LISTENING' 
-              ? "bg-nike-volt text-black shadow-[0_0_15px_rgba(204,255,0,0.6)] animate-pulse" 
-              : "bg-[#111111]/90 backdrop-blur-xl border border-white/10 text-nike-volt"
-          )}
-        >
-          <Mic size={24} />
-        </button>
+        {!isSafetyDriveMode && (
+          <button 
+            onClick={triggerVoiceAssistant}
+            className={cn(
+              "absolute right-6 w-14 h-14 rounded-2xl flex items-center justify-center z-[70] active:scale-90 transition-all bottom-[328px]",
+              aiStatus === 'LISTENING' 
+                ? "bg-nike-volt text-black shadow-[0_0_15px_rgba(204,255,0,0.6)] animate-pulse" 
+                : "bg-[#111111]/90 backdrop-blur-xl border border-white/10 text-nike-volt"
+            )}
+          >
+            <Mic size={24} />
+          </button>
+        )}
 
         {/* My Location Tracking Button */}
-        <button 
-          onClick={() => {
-            if (map) map.panTo(new kakao.maps.LatLng(currentPos.lat, currentPos.lng));
-          }}
-          className="absolute right-6 w-14 h-14 bg-[#111111]/90 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center z-[70] active:scale-90 transition-all text-nike-volt bottom-64"
-        >
-          <Navigation size={26} className="fill-none" />
-        </button>
+        {!isSafetyDriveMode && (
+          <button 
+            onClick={() => {
+              if (map) map.panTo(new kakao.maps.LatLng(currentPos.lat, currentPos.lng));
+            }}
+            className="absolute right-6 w-14 h-14 bg-[#111111]/90 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center z-[70] active:scale-90 transition-all text-nike-volt bottom-64"
+          >
+            <Navigation size={26} className="fill-none" />
+          </button>
+        )}
 
         {/* Safety Drive Button (Naver Map style) */}
         {!isNavigating && (
@@ -1212,16 +1216,96 @@ export const MainMap: React.FC = () => {
           </button>
         )}
 
-        {/* Nearby Search Button in Safety Driving Mode */}
+        {/* Naver Map Style Floating Circular Button Stack in Safety Driving Mode */}
         {isSafetyDriveMode && (
-          <button 
-            onClick={() => setIsRightSidebarOpen(true)}
-            className="absolute right-6 w-14 h-14 bg-[#111111]/90 backdrop-blur-xl border border-white/10 rounded-2xl flex flex-col items-center justify-center z-[70] active:scale-90 transition-all text-nike-volt bottom-[184px] hover:border-nike-volt/40 animate-in fade-in zoom-in duration-300"
-            title="주변 검색"
-          >
-            <Compass size={20} className="text-nike-volt transition-transform duration-500 hover:rotate-180" />
-            <span className="text-[7px] font-black tracking-tighter uppercase mt-1 text-white/80">주변 검색</span>
-          </button>
+          <div className="absolute right-6 top-[180px] z-[80] flex flex-col items-center gap-3.5 animate-in fade-in slide-in-from-right-4 duration-300">
+            {/* 1. Voice Mic Button */}
+            <button 
+              onClick={triggerVoiceAssistant}
+              className={cn(
+                "w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 shadow-xl border-2 active:scale-90",
+                aiStatus === 'LISTENING' 
+                  ? "bg-nike-volt border-nike-volt text-black animate-pulse shadow-[0_0_12px_rgba(204,255,0,0.5)]" 
+                  : "bg-[#111111]/90 border-emerald-500 text-emerald-400"
+              )}
+              title="음성 안내"
+            >
+              <Mic size={18} />
+            </button>
+
+            {/* 2. Search Button with expandable input */}
+            <div className="relative flex items-center justify-end pointer-events-auto">
+              {isSearchExpanded && (
+                <input 
+                  type="text" 
+                  placeholder="주변 검색..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSearch(searchQuery);
+                      setIsSearchExpanded(false);
+                    }
+                  }}
+                  autoFocus
+                  className="absolute right-13 w-32 bg-black/95 text-white border border-white/15 px-3 py-1.5 rounded-full text-[10px] font-black tracking-tight outline-none shadow-2xl animate-in slide-in-from-right-2 duration-300"
+                />
+              )}
+              <button 
+                onClick={() => setIsSearchExpanded(!isSearchExpanded)}
+                className={cn(
+                  "w-11 h-11 rounded-full bg-[#111111]/90 border flex items-center justify-center transition-all duration-300 shadow-xl active:scale-90",
+                  isSearchExpanded ? "border-nike-volt text-nike-volt" : "border-white/10 text-white"
+                )}
+                title="통합 검색"
+              >
+                <Search size={18} />
+              </button>
+            </div>
+
+            {/* 3. Gas Station Button with Price Badge */}
+            <div className="flex flex-col items-center">
+              <button 
+                onClick={() => handleSearch("주유소", true)}
+                className="w-11 h-11 rounded-full bg-[#111111]/90 border border-white/10 flex items-center justify-center transition-all duration-300 shadow-xl text-white hover:text-nike-volt active:scale-90"
+                title="주변 주유소"
+              >
+                <Fuel size={18} />
+              </button>
+              <span className="text-[7.5px] font-black bg-nike-volt text-black px-1.5 py-0.5 rounded-md mt-1 shadow-md leading-none border border-black/10 tracking-tighter shrink-0 select-none">
+                1,540원
+              </span>
+            </div>
+
+            {/* 4. Restaurant Button */}
+            <button 
+              onClick={() => handleSearch("맛집", true)}
+              className="w-11 h-11 rounded-full bg-[#111111]/90 border border-white/10 flex items-center justify-center transition-all duration-300 shadow-xl text-white hover:text-nike-volt active:scale-90"
+              title="주변 식당"
+            >
+              <Utensils size={18} />
+            </button>
+
+            {/* 5. Lodging/Stay Button */}
+            <button 
+              onClick={() => handleSearch("호텔", true)}
+              className="w-11 h-11 rounded-full bg-[#111111]/90 border border-white/10 flex items-center justify-center transition-all duration-300 shadow-xl text-white hover:text-nike-volt active:scale-90"
+              title="주변 숙소"
+            >
+              <Bed size={18} />
+            </button>
+
+            {/* 6. My Location Button */}
+            <button 
+              onClick={() => {
+                if (map) map.panTo(new kakao.maps.LatLng(currentPos.lat, currentPos.lng));
+              }}
+              className="w-11 h-11 rounded-full bg-[#111111]/90 border border-white/10 flex items-center justify-center transition-all duration-300 shadow-xl text-white hover:text-nike-volt active:scale-90"
+              title="내 위치"
+            >
+              <Navigation size={18} className="fill-none" />
+            </button>
+          </div>
         )}
       </div>
 
@@ -1503,131 +1587,6 @@ export const MainMap: React.FC = () => {
           <div className="flex-1 flex flex-col items-center justify-center gap-3">
             <div className="w-8 h-8 border-2 border-nike-volt/20 border-t-nike-volt rounded-full animate-spin" />
             <span className="text-[9px] font-black text-white/40 tracking-widest uppercase animate-pulse">실시간 주변 탐색 중...</span>
-          </div>
-        ) : isSafetyDriveMode ? (
-          /* Sidebar Search & Amenities for Safety Driving Mode */
-          <div className="flex-1 flex flex-col overflow-hidden animate-in fade-in duration-300">
-            {/* 1. Sidebar Search Box */}
-            <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-2xl px-3 py-2.5 mb-4 shrink-0 focus-within:border-nike-volt/40 transition-colors pointer-events-auto">
-              <Search className="text-white/40" size={16} />
-              <input 
-                type="text" 
-                placeholder="주변 검색어 입력..." 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch(searchQuery)}
-                className="bg-transparent border-none outline-none text-white text-xs flex-1 placeholder:text-white/20 uppercase font-black tracking-tight"
-              />
-              {searchQuery && (
-                <button onClick={() => { setSearchQuery(""); setSearchResults([]); setSelectedPlace(null); }} className="text-white/40 hover:text-white shrink-0">
-                  <X size={14} />
-                </button>
-              )}
-            </div>
-
-            {/* 2. Sidebar Category Selectors */}
-            <div className="grid grid-cols-3 gap-2 mb-6 shrink-0 pointer-events-auto">
-              {[
-                { id: 'fuel', icon: Fuel, label: '주유소', query: '주유소' },
-                { id: 'food', icon: Utensils, label: '식당', query: '맛집' },
-                { id: 'hotel', icon: Bed, label: '숙소', query: '호텔' },
-              ].map((cat) => (
-                <button 
-                  key={cat.id} 
-                  onClick={() => {
-                    setSearchQuery(cat.query);
-                    handleSearch(cat.query, true);
-                  }}
-                  className={cn(
-                    "flex flex-col items-center justify-center bg-white/5 border p-3 rounded-2xl transition-all text-white hover:text-nike-volt active:scale-95 shrink-0",
-                    searchQuery === cat.query ? "border-nike-volt/40 bg-nike-volt/5" : "border-white/5"
-                  )}
-                >
-                  <cat.icon size={16} className="text-nike-volt" />
-                  <span className="text-[9px] font-black tracking-tight mt-1">{cat.label}</span>
-                </button>
-              ))}
-            </div>
-
-            {/* 3. Search Results List */}
-            <div className="flex-1 overflow-y-auto no-scrollbar space-y-4 pr-1">
-              <div className="flex items-center justify-between border-b border-white/5 pb-1">
-                <span className="text-[10px] font-black text-white/50 uppercase tracking-widest">검색 결과 ({searchResults.length})</span>
-                {searchResults.length > 0 && (
-                  <button 
-                    onClick={() => {
-                      setSearchResults([]);
-                      setSelectedPlace(null);
-                      setSearchQuery("");
-                    }} 
-                    className="text-[9px] font-bold text-red-500/60 hover:text-red-500 uppercase tracking-tight"
-                  >
-                    초기화
-                  </button>
-                )}
-              </div>
-
-              {searchResults.length === 0 ? (
-                <div className="py-16 flex flex-col items-center justify-center gap-2 text-white/20">
-                  <Compass size={24} className="text-white/25 animate-pulse" />
-                  <span className="text-[10px] font-black uppercase tracking-tight text-center">주변 검색 또는 카테고리 선택</span>
-                </div>
-              ) : (
-                <div className="space-y-2 pointer-events-auto">
-                  {searchResults.map((place, idx) => {
-                    const formatDistance = (mStr: string) => {
-                      const m = parseInt(mStr);
-                      if (isNaN(m)) return mStr;
-                      if (m < 1000) return `${m}m`;
-                      return `${(m / 1000).toFixed(1)}km`;
-                    };
-
-                    return (
-                      <div 
-                        key={place.id || idx}
-                        className={cn(
-                          "w-full p-3 border transition-all text-left flex flex-col gap-1.5 cursor-pointer rounded-2xl",
-                          selectedPlace?.id === place.id
-                            ? "bg-nike-volt/10 border-nike-volt/30 text-white"
-                            : "bg-white/5 border-white/5 text-white hover:border-white/10"
-                        )}
-                        onClick={() => {
-                          setSelectedPlace(place);
-                          if (map) {
-                            map.panTo(new kakao.maps.LatLng(parseFloat(place.y), parseFloat(place.x)));
-                          }
-                        }}
-                      >
-                        <div className="flex justify-between items-start gap-1">
-                          <h4 className="text-xs font-black truncate leading-tight">{place.place_name}</h4>
-                          <span className="text-[9px] font-mono text-nike-volt shrink-0 font-bold leading-none">
-                            {place.distance ? formatDistance(place.distance) : ''}
-                          </span>
-                        </div>
-                        <p className="text-[9px] text-white/40 font-bold truncate leading-none">
-                          {place.road_address_name || place.address_name}
-                        </p>
-                        
-                        {selectedPlace?.id === place.id && (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setIsSafetyDriveMode(false);
-                              selectPlace(place);
-                              setIsRightSidebarOpen(false);
-                            }}
-                            className="mt-1 w-full bg-nike-volt text-black py-2 rounded-xl text-[10px] font-black italic uppercase tracking-tighter hover:scale-[1.02] active:scale-95 transition-transform flex items-center justify-center gap-1"
-                          >
-                            <Navigation2 size={10} className="fill-black" />
-                            목적지로 안내 시작
-                          </button>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
           </div>
         ) : (
           /* Original recommendations list */
@@ -2100,6 +2059,34 @@ export const MainMap: React.FC = () => {
                 </div>
               )}
            </div>
+        </div>
+      )}
+
+      {/* Selected Place Details Card for Safety Driving Mode */}
+      {isSafetyDriveMode && selectedPlace && (
+        <div className="absolute bottom-[240px] left-6 right-6 z-[70] bg-[#111111]/95 border border-white/10 rounded-2xl p-3 flex justify-between items-center shadow-2xl animate-in slide-in-from-bottom-2 duration-300 pointer-events-auto">
+          <div className="flex-1 min-w-0 text-left pl-1">
+            <h4 className="text-xs font-black text-white truncate">{selectedPlace.place_name}</h4>
+            <p className="text-[9px] text-white/40 font-bold truncate mt-0.5">{selectedPlace.road_address_name || selectedPlace.address_name}</p>
+          </div>
+          <div className="flex items-center gap-2 ml-3 shrink-0">
+            <button 
+              onClick={() => {
+                setIsSafetyDriveMode(false);
+                selectPlace(selectedPlace);
+              }}
+              className="bg-nike-volt text-black px-3 py-1.5 rounded-xl text-[10px] font-black italic uppercase tracking-tighter hover:scale-105 active:scale-95 transition-all flex items-center gap-1"
+            >
+              <Navigation2 size={10} className="fill-black" />
+              안내 시작
+            </button>
+            <button 
+              onClick={() => setSelectedPlace(null)}
+              className="w-7 h-7 bg-white/5 rounded-full flex items-center justify-center text-white/40 hover:text-white"
+            >
+              <X size={14} />
+            </button>
+          </div>
         </div>
       )}
 
