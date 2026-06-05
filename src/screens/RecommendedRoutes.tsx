@@ -10,8 +10,8 @@ const MOCK_ROUTES = [
     title: '서울 북악스카이웨이 야간 드라이브',
     titleEn: 'NORTH PEAK NIGHT DRIVE',
     region: 'SEOUL/GYEONGGI',
-    image: 'https://images.unsplash.com/photo-1510442650500-9321f8d59149?q=80&w=800&auto=format&fit=crop',
-    tags: ['CITY NIGHT', 'HILL CLIMB'],
+    image: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=800&auto=format&fit=crop',
+    tags: ['도심 야경', '힐클라이밍'],
     lat: 37.5926,
     lng: 126.9840
   },
@@ -20,8 +20,8 @@ const MOCK_ROUTES = [
     title: '광주 남한산성 성곽길 드라이브',
     titleEn: 'NAMHANSANSEONG CASTLE CRUISE',
     region: 'SEOUL/GYEONGGI',
-    image: 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=800&auto=format&fit=crop',
-    tags: ['FOREST ROAD', 'CITY VIEW'],
+    image: 'https://images.unsplash.com/photo-1628135245842-8356bb5f6b21?q=80&w=800&auto=format&fit=crop',
+    tags: ['숲길', '도심 전망'],
     lat: 37.4786,
     lng: 127.1856
   },
@@ -30,8 +30,8 @@ const MOCK_ROUTES = [
     title: '양평 두물머리 강변길',
     titleEn: 'DUMULMEORI RIVER CRUISE',
     region: 'SEOUL/GYEONGGI',
-    image: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=800&auto=format&fit=crop',
-    tags: ['RIVER VIEW', 'PEACEFUL'],
+    image: 'https://images.unsplash.com/photo-1601662528567-526cd06f6582?q=80&w=800&auto=format&fit=crop',
+    tags: ['리버뷰', '여유로움'],
     lat: 37.4913,
     lng: 127.3195
   },
@@ -40,8 +40,8 @@ const MOCK_ROUTES = [
     title: '가평 청평호반 드라이브 코스',
     titleEn: 'CHEONGPYEONG LAKE DRIVE',
     region: 'SEOUL/GYEONGGI',
-    image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=800&auto=format&fit=crop',
-    tags: ['LAKE VIEW', 'WINDING'],
+    image: 'https://images.unsplash.com/photo-1549692520-acc6669e2f0c?q=80&w=800&auto=format&fit=crop',
+    tags: ['레이크뷰', '와인딩'],
     lat: 37.7123,
     lng: 127.4256
   },
@@ -51,7 +51,7 @@ const MOCK_ROUTES = [
     titleEn: 'JAYURO IMJINGAK ROAD',
     region: 'SEOUL/GYEONGGI',
     image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=800&auto=format&fit=crop',
-    tags: ['HIGHWAY', 'BORDER ROAD'],
+    tags: ['고속도로', '민통선 인근'],
     lat: 37.8925,
     lng: 126.7456
   },
@@ -62,8 +62,8 @@ const MOCK_ROUTES = [
     title: '영종도 해안남로 노을 드라이브',
     titleEn: 'YEONGJONGDO SUNSET DRIVE',
     region: 'INCHEON',
-    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop',
-    tags: ['OCEAN VIEW', 'AIRPORT'],
+    image: 'https://images.unsplash.com/photo-1616781295845-f09c2a6379c6?q=80&w=800&auto=format&fit=crop',
+    tags: ['오션뷰', '공항 인근'],
     lat: 37.4332,
     lng: 126.4716
   },
@@ -72,8 +72,8 @@ const MOCK_ROUTES = [
     title: '송도 센트럴파크 시티뷰 코스',
     titleEn: 'SONGDO CENTRAL PARK DRIVE',
     region: 'INCHEON',
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop',
-    tags: ['CITY VIEW', 'SKYSCRAPERS'],
+    image: 'https://images.unsplash.com/photo-1510442650500-9321f8d59149?q=80&w=800&auto=format&fit=crop',
+    tags: ['시티뷰', '미래도시'],
     lat: 37.3912,
     lng: 126.6356
   },
@@ -82,8 +82,8 @@ const MOCK_ROUTES = [
     title: '강화도 해안순환도로 드라이브',
     titleEn: 'GANGHWADO ISLAND CRUISE',
     region: 'INCHEON',
-    image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800&auto=format&fit=crop',
-    tags: ['HISTORICAL', 'COASTAL'],
+    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop',
+    tags: ['역사 탐방', '해안도로'],
     lat: 37.7012,
     lng: 126.4523
   },
@@ -93,7 +93,7 @@ const MOCK_ROUTES = [
     titleEn: 'ARAWATERWAY SUNSET DRIVE',
     region: 'INCHEON',
     image: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?q=80&w=800&auto=format&fit=crop',
-    tags: ['CANAL VIEW', 'SUNSET'],
+    tags: ['운하 조망', '노을'],
     lat: 37.5645,
     lng: 126.6012
   },
@@ -103,7 +103,7 @@ const MOCK_ROUTES = [
     titleEn: 'YEONGHEUNGDO BEACH CRUISE',
     region: 'INCHEON',
     image: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?q=80&w=800&auto=format&fit=crop',
-    tags: ['MUDFLAT', 'BEACH COVE'],
+    tags: ['갯벌', '해안 해변'],
     lat: 37.2845,
     lng: 126.4956
   },
@@ -115,7 +115,7 @@ const MOCK_ROUTES = [
     titleEn: 'MILLENNIUM COAST ROAD',
     region: 'GANGWON',
     image: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?q=80&w=800&auto=format&fit=crop',
-    tags: ['EAST SEA', 'ROCKY'],
+    tags: ['동해바다', '기암괴석'],
     lat: 37.4411,
     lng: 129.1706
   },
@@ -125,7 +125,7 @@ const MOCK_ROUTES = [
     titleEn: 'HEONHWARO CRASHING WAVES',
     region: 'GANGWON',
     image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=800&auto=format&fit=crop',
-    tags: ['CLOSE SEA', 'COAST CLIFF'],
+    tags: ['해안 밀착', '해안절벽'],
     lat: 37.6698,
     lng: 129.0494
   },
@@ -135,7 +135,7 @@ const MOCK_ROUTES = [
     titleEn: 'JEONGSEON VALLEY ROAD',
     region: 'GANGWON',
     image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800&auto=format&fit=crop',
-    tags: ['DEEP VALLEY', 'ROCKY CLIFF'],
+    tags: ['깊은 계곡', '암벽 비경'],
     lat: 37.3391,
     lng: 128.7490
   },
@@ -145,7 +145,7 @@ const MOCK_ROUTES = [
     titleEn: 'UIYAM LAKE WATERWAY DRIVE',
     region: 'GANGWON',
     image: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=800&auto=format&fit=crop',
-    tags: ['FOGGY LAKE', 'PEACEFUL'],
+    tags: ['물안개 호수', '여유로움'],
     lat: 37.8812,
     lng: 127.7012
   },
@@ -155,7 +155,7 @@ const MOCK_ROUTES = [
     titleEn: 'HAMBAEKSAN MANHANGJAE CLIMB',
     region: 'GANGWON',
     image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800&auto=format&fit=crop',
-    tags: ['MOUNTAIN PASS', 'WINDING ROAD'],
+    tags: ['고갯길', '와인딩 로드'],
     lat: 37.1645,
     lng: 128.8956
   },
@@ -166,8 +166,8 @@ const MOCK_ROUTES = [
     title: '청주 대청호반 드라이브 코스',
     titleEn: 'DAECHYEONG LAKE ROAD',
     region: 'CHUNGCHEONG',
-    image: 'https://images.unsplash.com/photo-1472214222541-d510753a4907?q=80&w=800&auto=format&fit=crop',
-    tags: ['LAKE CRUISE', 'CHERRY BLOSSOM'],
+    image: 'https://images.unsplash.com/photo-1528164344705-47542687000d?q=80&w=800&auto=format&fit=crop',
+    tags: ['드라이브 코스', '벚꽃길'],
     lat: 36.4678,
     lng: 127.4789
   },
@@ -177,7 +177,7 @@ const MOCK_ROUTES = [
     titleEn: 'BOBALJAE S-CURVE PASS',
     region: 'CHUNGCHEONG',
     image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=800&auto=format&fit=crop',
-    tags: ['WINDING PASS', 'AUTUMN FOLIAGE'],
+    tags: ['구불구불 고개', '단풍길'],
     lat: 37.0423,
     lng: 128.4312
   },
@@ -187,7 +187,7 @@ const MOCK_ROUTES = [
     titleEn: 'CHUNGJUHO LAKE DRIVE',
     region: 'CHUNGCHEONG',
     image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=800&auto=format&fit=crop',
-    tags: ['LAKE CRUISE', 'NATURE'],
+    tags: ['드라이브 코스', '대자연'],
     lat: 36.9845,
     lng: 127.9956
   },
@@ -197,7 +197,7 @@ const MOCK_ROUTES = [
     titleEn: 'ANMYEONDO PINE ROAD',
     region: 'CHUNGCHEONG',
     image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=800&auto=format&fit=crop',
-    tags: ['PINE WOODS', 'WEST COAST'],
+    tags: ['솔숲길', '서해안'],
     lat: 36.5312,
     lng: 126.3656
   },
@@ -207,7 +207,7 @@ const MOCK_ROUTES = [
     titleEn: 'BAEKMA RIVER CRUISE',
     region: 'CHUNGCHEONG',
     image: 'https://images.unsplash.com/photo-1472214222541-d510753a4907?q=80&w=800&auto=format&fit=crop',
-    tags: ['RIVER VIEW', 'HISTORICAL'],
+    tags: ['리버뷰', '역사 탐방'],
     lat: 36.2845,
     lng: 126.9012
   },
@@ -219,7 +219,7 @@ const MOCK_ROUTES = [
     titleEn: 'DAMYANG REDWOOD TUNNEL',
     region: 'JEOLLA',
     image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=800&auto=format&fit=crop',
-    tags: ['TREE TUNNEL', 'GREEN FOREST'],
+    tags: ['가로수 터널', '초록빛 숲'],
     lat: 35.3216,
     lng: 127.0094
   },
@@ -229,7 +229,7 @@ const MOCK_ROUTES = [
     titleEn: 'YEONGGWANG SUNSET ROAD',
     region: 'JEOLLA',
     image: 'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?q=80&w=800&auto=format&fit=crop',
-    tags: ['WEST SEA', 'HIGH CLIFF'],
+    tags: ['서해바다', '높은 절벽'],
     lat: 35.3854,
     lng: 126.3768
   },
@@ -239,7 +239,7 @@ const MOCK_ROUTES = [
     titleEn: 'JIRISAN JEONGRYEONGCHI CRUISE',
     region: 'JEOLLA',
     image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=800&auto=format&fit=crop',
-    tags: ['MOUNTAIN', 'WINDING ROAD'],
+    tags: ['명산', '와인딩 로드'],
     lat: 35.4412,
     lng: 127.5356
   },
@@ -249,7 +249,7 @@ const MOCK_ROUTES = [
     titleEn: 'SUNCHEON BAY SUNSET DRIVE',
     region: 'JEOLLA',
     image: 'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?q=80&w=800&auto=format&fit=crop',
-    tags: ['MUDFLAT', 'SUNSET VIEW'],
+    tags: ['갯벌', '노을 감상'],
     lat: 34.8645,
     lng: 127.5612
   },
@@ -259,7 +259,7 @@ const MOCK_ROUTES = [
     titleEn: 'BYEONSAN COASTAL ROAD',
     region: 'JEOLLA',
     image: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?q=80&w=800&auto=format&fit=crop',
-    tags: ['CLIFF ROAD', 'COASTAL'],
+    tags: ['절벽 도로', '해안도로'],
     lat: 35.6123,
     lng: 126.4756
   },
@@ -271,7 +271,7 @@ const MOCK_ROUTES = [
     titleEn: 'GYEONGJU BOMUN LAKE',
     region: 'GYEONGSANG',
     image: 'https://images.unsplash.com/photo-1528164344705-47542687000d?q=80&w=800&auto=format&fit=crop',
-    tags: ['HISTORIC LAKE', 'FLOWER PATH'],
+    tags: ['역사 호수', '꽃길'],
     lat: 35.8431,
     lng: 129.2783
   },
@@ -281,7 +281,7 @@ const MOCK_ROUTES = [
     titleEn: 'NAMHAE COAST CRUISE',
     region: 'GYEONGSANG',
     image: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?q=80&w=800&auto=format&fit=crop',
-    tags: ['SOUTH SEA', 'ISLAND BRIDGE'],
+    tags: ['남해바다', '연륙교'],
     lat: 34.8361,
     lng: 128.0264
   },
@@ -291,7 +291,7 @@ const MOCK_ROUTES = [
     titleEn: 'YEONGDEOK BLUE ROAD',
     region: 'GYEONGSANG',
     image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop',
-    tags: ['BLUE SEA', 'COAST DRIVE'],
+    tags: ['푸른 바다', '해안 드라이브'],
     lat: 36.4123,
     lng: 129.3956
   },
@@ -301,7 +301,7 @@ const MOCK_ROUTES = [
     titleEn: 'CHEONGDO UNMUNHO LAKE DRIVE',
     region: 'GYEONGSANG',
     image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=800&auto=format&fit=crop',
-    tags: ['REFLECTIVE', 'LAKE PATH'],
+    tags: ['물그림자', '호반 도로'],
     lat: 35.7012,
     lng: 128.9056
   },
@@ -311,7 +311,7 @@ const MOCK_ROUTES = [
     titleEn: 'ANDONGHO LAKE BRIDGE CRUISE',
     region: 'GYEONGSANG',
     image: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=80&w=800&auto=format&fit=crop',
-    tags: ['BRIDGE CRUISE', 'PEACEFUL'],
+    tags: ['교량 드라이브', '여유로움'],
     lat: 36.6845,
     lng: 128.8912
   },
@@ -323,7 +323,7 @@ const MOCK_ROUTES = [
     titleEn: 'BUSAN GWANGAN BRIDGE',
     region: 'BUSAN/ULSAN',
     image: 'https://images.unsplash.com/photo-1598463065730-abbb7f94bbcd?q=80&w=800&auto=format&fit=crop',
-    tags: ['CITY NIGHT', 'OCEAN BRIDGE'],
+    tags: ['도심 야경', '바다 위 교량'],
     lat: 35.1481,
     lng: 129.1124,
     type: 'DRIVE'
@@ -334,7 +334,7 @@ const MOCK_ROUTES = [
     titleEn: 'GANJEOLGOT SUNRISE CRUISE',
     region: 'BUSAN/ULSAN',
     image: 'https://images.unsplash.com/photo-1502945015378-0e284ca1a5be?q=80&w=800&auto=format&fit=crop',
-    tags: ['SUNRISE', 'LIGHTHOUSE'],
+    tags: ['일출', '등대'],
     lat: 35.3612,
     lng: 129.3645,
     type: 'DRIVE'
@@ -345,7 +345,7 @@ const MOCK_ROUTES = [
     titleEn: 'DALMAJIGIL HILL CRUISE',
     region: 'BUSAN/ULSAN',
     image: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?q=80&w=800&auto=format&fit=crop',
-    tags: ['OCEAN VIEW', 'COFFEE STRIP'],
+    tags: ['오션뷰', '카페거리'],
     lat: 35.1589,
     lng: 129.1765,
     type: 'DRIVE'
@@ -356,7 +356,7 @@ const MOCK_ROUTES = [
     titleEn: 'YEONGDO HARBOR CRUISE',
     region: 'BUSAN/ULSAN',
     image: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?q=80&w=800&auto=format&fit=crop',
-    tags: ['BRIDGE NIGHT', 'HARBOR'],
+    tags: ['대교 야경', '항구'],
     lat: 35.0912,
     lng: 129.0656,
     type: 'DRIVE'
@@ -367,7 +367,7 @@ const MOCK_ROUTES = [
     titleEn: 'JUJEON PEBBLE COAST DRIVE',
     region: 'BUSAN/ULSAN',
     image: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?q=80&w=800&auto=format&fit=crop',
-    tags: ['PEBBLE BEACH', 'WINDY OCEAN'],
+    tags: ['몽돌해변', '바람보는 바다'],
     lat: 35.6012,
     lng: 129.4356,
     type: 'DRIVE'
@@ -380,7 +380,7 @@ const MOCK_ROUTES = [
     titleEn: 'WINDMILL COAST CRUISE',
     region: 'JEJU',
     image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=800&auto=format&fit=crop',
-    tags: ['SUNSET', 'OCEAN'],
+    tags: ['노을', '푸른 바다'],
     lat: 33.3486,
     lng: 126.1756
   },
@@ -390,7 +390,7 @@ const MOCK_ROUTES = [
     titleEn: '1100 HIGHLAND SNOW ROAD',
     region: 'JEJU',
     image: 'https://images.unsplash.com/photo-1482862549707-f63cb32c5fd9?q=80&w=800&auto=format&fit=crop',
-    tags: ['MOUNTAIN PASS', 'HIGH ALTITUDE'],
+    tags: ['고갯길', '고지대 고개'],
     lat: 33.3934,
     lng: 126.4632
   },
@@ -400,7 +400,7 @@ const MOCK_ROUTES = [
     titleEn: 'SARYEONI FOREST ROAD',
     region: 'JEJU',
     image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=800&auto=format&fit=crop',
-    tags: ['FOREST', 'CEDAR TREES'],
+    tags: ['숲길', '삼나무 터널'],
     lat: 33.4012,
     lng: 126.6456
   },
@@ -410,7 +410,7 @@ const MOCK_ROUTES = [
     titleEn: 'AEWOL CLIFF ROAD',
     region: 'JEJU',
     image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=800&auto=format&fit=crop',
-    tags: ['COAST CLIFF', 'SUNSET'],
+    tags: ['해안절벽', '노을'],
     lat: 33.4712,
     lng: 126.3545
   },
@@ -420,7 +420,7 @@ const MOCK_ROUTES = [
     titleEn: 'JONGDALLI FLOWER ROAD',
     region: 'JEJU',
     image: 'https://images.unsplash.com/photo-1528164344705-47542687000d?q=80&w=800&auto=format&fit=crop',
-    tags: ['FLOWERS', 'EAST BEACH'],
+    tags: ['꽃길', '동쪽 해변'],
     lat: 33.5123,
     lng: 126.9045
   },
@@ -432,7 +432,7 @@ const MOCK_ROUTES = [
     titleEn: 'ULLEUNGDO ISLAND CRUISE',
     region: 'ISLANDS',
     image: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=80&w=800&auto=format&fit=crop',
-    tags: ['MYSTICAL SEA', 'RING ROAD'],
+    tags: ['비경 바다', '일주도로'],
     lat: 37.4841,
     lng: 130.9023
   },
@@ -442,7 +442,7 @@ const MOCK_ROUTES = [
     titleEn: 'TAEHA COASTAL PATH',
     region: 'ISLANDS',
     image: 'https://images.unsplash.com/photo-1502945015378-0e284ca1a5be?q=80&w=800&auto=format&fit=crop',
-    tags: ['WALK', 'WOODEN WALKWAY'],
+    tags: ['산책', '나무 데크길'],
     lat: 37.5123,
     lng: 130.8012,
     type: 'WALK'
@@ -453,7 +453,7 @@ const MOCK_ROUTES = [
     titleEn: 'SAMSEONAM ROCK ROAD',
     region: 'ISLANDS',
     image: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?q=80&w=800&auto=format&fit=crop',
-    tags: ['ROCK COLUMN', 'OCEAN SHORE'],
+    tags: ['기암절벽', '해안가'],
     lat: 37.5512,
     lng: 130.9345
   },
@@ -463,7 +463,7 @@ const MOCK_ROUTES = [
     titleEn: 'DOKDO OBSERVATORY TRAIL',
     region: 'ISLANDS',
     image: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=800&auto=format&fit=crop',
-    tags: ['WALK', 'MOUNTAIN TOP'],
+    tags: ['산책', '산정상'],
     lat: 37.4856,
     lng: 130.9012,
     type: 'WALK'
@@ -474,7 +474,7 @@ const MOCK_ROUTES = [
     titleEn: 'DOKDO CLIFF WALK',
     region: 'ISLANDS',
     image: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?q=80&w=800&auto=format&fit=crop',
-    tags: ['WALK', 'VOLCANIC LAND'],
+    tags: ['산책', '화산섬 지형'],
     lat: 37.2412,
     lng: 131.8656,
     type: 'WALK'
@@ -548,10 +548,10 @@ export const RecommendedRoutes: React.FC = () => {
       <div className="flex justify-between items-center mb-10 shrink-0">
         <div>
           <h2 className="text-4xl font-black italic tracking-tighter text-white uppercase leading-none">
-            DRIVE CURATED
+            추천 테마 코스
           </h2>
           <p className="text-nike-volt font-mono text-[10px] mt-2 uppercase tracking-[0.3em] font-bold">
-            PRO SELECTION
+            큐레이션 드라이브
           </p>
         </div>
         <Compass className="text-nike-volt opacity-20" size={40} />
@@ -640,13 +640,13 @@ export const RecommendedRoutes: React.FC = () => {
             <div className="absolute bottom-6 left-6 right-6 flex justify-between items-end">
               <div className="text-left">
                 <h3 className="text-2xl font-black italic tracking-tighter text-white uppercase leading-none mb-2 pr-4">
-                  {route.titleEn}
+                  {route.title}
                 </h3>
                 <p className={cn(
                   "font-bold text-[10px] uppercase tracking-widest",
                   route.type === 'WALK' ? "text-emerald-400" : "text-nike-volt"
                 )}>
-                  {route.title}
+                  {route.titleEn}
                 </p>
               </div>
 
@@ -660,7 +660,7 @@ export const RecommendedRoutes: React.FC = () => {
           </div>
         )) : (
           <div className="flex flex-col items-center justify-center h-40 text-white/20 uppercase italic font-black">
-            No curated routes yet.
+            추천 코스가 존재하지 않습니다.
           </div>
         )}
       </div>
