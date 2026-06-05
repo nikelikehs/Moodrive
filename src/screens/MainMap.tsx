@@ -466,9 +466,7 @@ export const MainMap: React.FC = () => {
     mode: 'CAR' | 'BUS' | 'WALK' | 'BIKE' = transportMode
   ) => {
     try {
-      const startCoords = startPlace 
-        ? { lat: parseFloat(startPlace.y), lng: parseFloat(startPlace.x) } 
-        : currentPos;
+      const startCoords = currentPos;
       // 1. Current position to Course Start point
       const res1 = await fetchOSRMRoute(startCoords, start, mode);
       // 2. Course Start point to Course End point (the curated course segment)
@@ -514,11 +512,9 @@ export const MainMap: React.FC = () => {
     }
   };
 
-  const recalculateRoute = async (sPlace: any | null, dPlace: any) => {
+  const recalculateRoute = async (_sPlace: any | null, dPlace: any) => {
     if (!dPlace) return;
-    const startCoords = sPlace 
-      ? { lat: parseFloat(sPlace.y), lng: parseFloat(sPlace.x) } 
-      : currentPos;
+    const startCoords = currentPos;
     const end = { lat: parseFloat(dPlace.y), lng: parseFloat(dPlace.x) };
 
     if (map) {
@@ -878,9 +874,7 @@ export const MainMap: React.FC = () => {
   const getRoute = async (destLat: string, destLng: string, mode: 'CAR' | 'BUS' | 'WALK' | 'BIKE' = transportMode) => {
     const end = { lat: parseFloat(destLat), lng: parseFloat(destLng) };
     try {
-      const startCoords = startPlace 
-        ? { lat: parseFloat(startPlace.y), lng: parseFloat(startPlace.x) } 
-        : currentPos;
+      const startCoords = currentPos;
       const res = await fetchOSRMRoute(startCoords, end, mode);
       
       let adjusted = { ...res, toll: 0 };
@@ -2128,9 +2122,7 @@ export const MainMap: React.FC = () => {
                 setSearchResults([]);
                 setSearchQuery("");
                 
-                const startCoords = startPlace 
-                  ? { lat: parseFloat(startPlace.y), lng: parseFloat(startPlace.x) } 
-                  : currentPos;
+                const startCoords = currentPos;
                 const end = { lat: parseFloat(selectedPlace.y), lng: parseFloat(selectedPlace.x) };
                 
                 try {
