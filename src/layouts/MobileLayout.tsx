@@ -13,6 +13,11 @@ const BottomNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
+  const [isTouch, setIsTouch] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
+  }, []);
   
   const navItems = [
     { name: t('nav_map'), icon: Map, path: '/app/map' },
@@ -30,7 +35,9 @@ const BottomNav = () => {
       <div className="w-full px-5 pb-4 pointer-events-none">
         <div className={cn(
           "h-[68px] bg-[#111111]/95 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-around px-2 pointer-events-auto transition-all duration-500 transform shadow-none",
-          "translate-y-20 opacity-0 group-hover/nav:translate-y-0 group-hover/nav:opacity-100 hover:translate-y-0 hover:opacity-100"
+          isTouch 
+            ? "translate-y-0 opacity-100" 
+            : "translate-y-20 opacity-0 group-hover/nav:translate-y-0 group-hover/nav:opacity-100 hover:translate-y-0 hover:opacity-100"
         )}>
           {navItems.map((item) => {
             const Icon = item.icon;

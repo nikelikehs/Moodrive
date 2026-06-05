@@ -528,6 +528,24 @@ export const RecommendedRoutes: React.FC = () => {
     scrollRef.current.scrollLeft = scrollLeft - walk;
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!scrollRef.current) return;
+    setIsDown(true);
+    setStartX(e.touches[0].pageX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
+  };
+
+  const handleTouchEnd = () => {
+    setIsDown(false);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDown || !scrollRef.current) return;
+    const x = e.touches[0].pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    scrollRef.current.scrollLeft = scrollLeft - walk;
+  };
+
   const filteredRoutes = MOCK_ROUTES.filter(route => {
     const regionMatch = activeRegion === 'ALL' || route.region === activeRegion;
     const typeMatch = activeType === 'ALL' || 
@@ -565,6 +583,9 @@ export const RecommendedRoutes: React.FC = () => {
           onMouseLeave={handleMouseLeave}
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          onTouchMove={handleTouchMove}
           style={{ scrollBehavior: isDown ? 'auto' : 'smooth' }}
           className="flex gap-2 overflow-x-auto no-scrollbar pb-2 select-none cursor-grab active:cursor-grabbing"
         >
