@@ -560,7 +560,7 @@ export const RecommendedRoutes: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-[#0a0a0a] px-6 pt-12 pb-32 relative transition-colors duration-300 overflow-hidden">
+    <div className="w-full h-full flex flex-col bg-[var(--bg-app)] px-6 pt-12 pb-32 relative transition-colors duration-300 overflow-hidden">
       <div className="max-w-2xl mx-auto w-full flex flex-col flex-1 overflow-hidden">
         {/* Header */}
         <div className="flex justify-between items-center mb-10 shrink-0">

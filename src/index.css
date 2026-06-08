@@ -7,7 +7,7 @@
   --color-primary-600: #7c3aed;
   
   /* Nike Matte Theme - Core Colors */
-  --color-nike-volt: #CCFF00;
+  --color-nike-volt: var(--theme-accent);
   --color-nike-crimson: #E01E3C;
   --color-dark-muted: #888888;
   
@@ -17,6 +17,7 @@
 
 @layer base {
   :root {
+    --theme-accent: #CCFF00;
     --bg-app: #FFFFFF;
     --bg-panel: #F5F5F7;
     --bg-card: #FFFFFF;
@@ -26,12 +27,49 @@
   }
 
   .dark {
+    --theme-accent: #CCFF00;
     --bg-app: #000000;
     --bg-panel: #111111;
     --bg-card: #161616;
     --text-main: #FFFFFF;
     --text-muted: #888888;
     --border-subtle: rgba(255,255,255,0.05);
+  }
+
+  /* Custom Color Themes overriding accent and background properties */
+  .theme-volt {
+    --theme-accent: #CCFF00;
+    --bg-app: #000000;
+    --bg-panel: #111111;
+    --bg-card: #161616;
+  }
+
+  .theme-crimson {
+    --theme-accent: #FF3B30;
+    --bg-app: #0d0505;
+    --bg-panel: #1a0a0a;
+    --bg-card: #221010;
+  }
+
+  .theme-blue {
+    --theme-accent: #00E5FF;
+    --bg-app: #020813;
+    --bg-panel: #051226;
+    --bg-card: #091b35;
+  }
+
+  .theme-green {
+    --theme-accent: #00FF85;
+    --bg-app: #010a05;
+    --bg-panel: #03170c;
+    --bg-card: #052414;
+  }
+
+  .theme-purple {
+    --theme-accent: #DF00FF;
+    --bg-app: #0a0210;
+    --bg-panel: #150522;
+    --bg-card: #200933;
   }
 
   html, body {

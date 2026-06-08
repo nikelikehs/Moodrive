@@ -329,16 +329,16 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex justify-center items-center p-0 md:p-8 transition-colors duration-300">
-      <div className="w-full h-[100dvh] md:h-[844px] md:max-h-[100vh] max-w-[390px] bg-[#0a0a0a] md:rounded-[40px] border-none overflow-hidden relative flex flex-col transition-colors duration-300 shadow-none">
-        <div className="w-full h-full bg-[#0a0a0a] flex flex-col items-center justify-between p-10 font-sans relative overflow-hidden">
+    <div className="min-h-screen bg-[var(--bg-app)] flex justify-center items-center p-0 md:p-8 transition-colors duration-300">
+      <div className="w-full h-[100dvh] md:h-[844px] md:max-h-[100vh] max-w-[390px] bg-[var(--bg-app)] md:rounded-[40px] border-none overflow-hidden relative flex flex-col transition-colors duration-300 shadow-none">
+        <div className="w-full h-full bg-[var(--bg-app)] flex flex-col items-center justify-between p-10 font-sans relative overflow-hidden">
       
       {/* Invisible Recaptcha Target */}
       <div id="recaptcha-container"></div>
 
       {/* Success Animation Overlay */}
       {loginSuccess && (
-        <div className="absolute inset-0 bg-[#0a0a0a] z-[200] flex flex-col items-center justify-center animate-in fade-in duration-500">
+        <div className="absolute inset-0 bg-[var(--bg-app)] z-[200] flex flex-col items-center justify-center animate-in fade-in duration-500">
           <div className="w-20 h-20 bg-nike-volt rounded-full flex items-center justify-center mb-6 animate-bounce">
             <CheckCircle2 size={44} className="text-black" />
           </div>

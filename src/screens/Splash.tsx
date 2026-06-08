@@ -21,8 +21,8 @@ export const Splash: React.FC = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex justify-center items-center p-0 md:p-8 transition-colors duration-300">
-      <div className="w-full h-[100dvh] md:h-[844px] md:max-h-[100vh] max-w-[390px] bg-[#0a0a0a] md:rounded-[40px] border-none overflow-hidden relative flex flex-col transition-colors duration-300 shadow-none">
+    <div className="min-h-screen bg-[var(--bg-app)] flex justify-center items-center p-0 md:p-8 transition-colors duration-300">
+      <div className="w-full h-[100dvh] md:h-[844px] md:max-h-[100vh] max-w-[390px] bg-[var(--bg-app)] md:rounded-[40px] border-none overflow-hidden relative flex flex-col transition-colors duration-300 shadow-none">
         <div className="flex flex-col items-center justify-center w-full h-full bg-black text-white overflow-hidden relative font-sans">
       <div 
         className={cn(

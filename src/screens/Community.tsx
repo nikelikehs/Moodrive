@@ -313,10 +313,10 @@ export const Community: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-[#0a0a0a] text-white font-sans relative select-none">
+    <div className="w-full h-full flex flex-col bg-[var(--bg-app)] text-white font-sans relative select-none">
       
       {/* HEADER SECTION */}
-      <div className="px-6 pt-10 pb-6 bg-[#0a0a0a] border-b border-white/5 sticky top-0 z-30 flex flex-col">
+      <div className="px-6 pt-10 pb-6 bg-[var(--bg-app)] border-b border-white/5 sticky top-0 z-30 flex flex-col">
         <div className="max-w-2xl mx-auto w-full flex flex-col">
           <div className="flex justify-between items-center mb-6">
             <div>
@@ -572,10 +572,10 @@ export const Community: React.FC = () => {
           LIVE CHAT ROOM PANEL (INSTAGRAM STYLE DRAWER)
       ======================================================== */}
       {selectedRoom && (
-        <div className="absolute inset-0 bg-[#0a0a0a] z-[100] flex flex-col animate-in slide-in-from-right duration-300">
+        <div className="absolute inset-0 bg-[var(--bg-app)] z-[100] flex flex-col animate-in slide-in-from-right duration-300">
            
            {/* Chat Header */}
-           <div className="px-6 pt-10 pb-6 border-b border-white/5 flex items-center justify-between shrink-0 bg-[#0a0a0a]">
+           <div className="px-6 pt-10 pb-6 border-b border-white/5 flex items-center justify-between shrink-0 bg-[var(--bg-app)]">
               <div className="max-w-2xl mx-auto w-full flex items-center justify-between">
                  <div className="flex items-center gap-3">
                     <button 
@@ -640,7 +640,7 @@ export const Community: React.FC = () => {
            {/* Chat Input Footer */}
            <form 
              onSubmit={handleSendChatMessage}
-             className="p-5 border-t border-white/5 bg-[#0a0a0a] pb-10 shrink-0"
+             className="p-5 border-t border-white/5 bg-[var(--bg-app)] pb-10 shrink-0"
            >
               <div className="max-w-2xl mx-auto w-full flex gap-2.5 items-center bg-[#111111] p-2 rounded-2xl border border-white/5 focus-within:border-nike-volt/30 transition-colors">
                  <input 

@@ -1115,7 +1115,7 @@ export const MainMap: React.FC = () => {
   );
 
   return (
-    <div className="w-full h-full bg-[#0a0a0a] relative overflow-hidden font-sans">
+    <div className="w-full h-full bg-[var(--bg-app)] relative overflow-hidden font-sans">
       <div className="absolute inset-0 z-0">
         <Map center={currentPos} style={{ width: '100%', height: '100%' }} level={4} onCreate={setMap}>
           {polylinePath.length > 0 && (

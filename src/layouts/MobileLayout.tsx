@@ -78,9 +78,9 @@ const BottomNav = () => {
 
 export const MobileLayout: React.FC = () => {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex justify-center items-center p-0 transition-colors duration-300">
-      <div className="w-full h-[100dvh] md:h-screen md:max-h-screen max-w-none bg-[#0a0a0a] border-none overflow-hidden relative flex flex-col transition-colors duration-300 shadow-none">
-        <div className="flex-1 overflow-hidden relative bg-[#0a0a0a] transition-colors duration-300">
+    <div className="min-h-screen bg-[var(--bg-app)] flex justify-center items-center p-0 transition-colors duration-300">
+      <div className="w-full h-[100dvh] md:h-screen md:max-h-screen max-w-none bg-[var(--bg-app)] border-none overflow-hidden relative flex flex-col transition-colors duration-300 shadow-none">
+        <div className="flex-1 overflow-hidden relative bg-[var(--bg-app)] transition-colors duration-300">
           <Outlet />
         </div>
         <BottomNav />

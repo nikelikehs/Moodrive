@@ -25,7 +25,7 @@ import { voiceService, VOICE_PERSONAS } from '../services/voice';
 export const Settings: React.FC = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { theme, toggleTheme, isGrayscale, toggleGrayscale } = useTheme();
+  const { theme, toggleTheme, isGrayscale, toggleGrayscale, colorTheme, setColorTheme } = useTheme();
 
   const currentLanguage = i18n.language;
   const [geminiKey, setGeminiKey] = useState(() => localStorage.getItem('moodrive_gemini_key') || '');
@@ -177,9 +177,9 @@ export const Settings: React.FC = () => {
   };
 
   return (
-    <div className="absolute inset-0 bg-[#0a0a0a] flex flex-col font-sans text-white select-none">
+    <div className="absolute inset-0 bg-[var(--bg-app)] flex flex-col font-sans text-white select-none">
       {/* Header */}
-      <div className="px-6 py-6 flex items-center bg-[#0a0a0a] border-b border-white/5 sticky top-0 z-[100] shrink-0">
+      <div className="px-6 py-6 flex items-center bg-[var(--bg-app)] border-b border-white/5 sticky top-0 z-[100] shrink-0">
         <div className="max-w-2xl mx-auto w-full flex items-center">
           <button 
             onClick={() => navigate(-1)} 
@@ -634,6 +634,41 @@ export const Settings: React.FC = () => {
                 )} 
               />
             </button>
+          </div>
+
+          {/* Custom Theme Color Settings */}
+          <div className="bg-[#111111] border border-white/5 rounded-[32px] p-5 space-y-4">
+            <div className="text-left">
+              <h4 className="text-xs font-bold text-white">커스텀 테마 색상 설정</h4>
+              <p className="text-[9px] text-white/30 font-medium mt-0.5">앱 전체의 포인트 컬러와 배경 테마 톤을 설정합니다.</p>
+            </div>
+            
+            <div className="grid grid-cols-5 gap-2">
+              {[
+                { id: 'volt', label: 'VOLT', colorClass: 'bg-[#CCFF00]' },
+                { id: 'crimson', label: 'RED', colorClass: 'bg-[#FF3B30]' },
+                { id: 'blue', label: 'BLUE', colorClass: 'bg-[#00E5FF]' },
+                { id: 'green', label: 'GREEN', colorClass: 'bg-[#00FF85]' },
+                { id: 'purple', label: 'PURPLE', colorClass: 'bg-[#DF00FF]' }
+              ].map((themeOpt) => {
+                const isActive = colorTheme === themeOpt.id;
+                return (
+                  <button
+                    key={themeOpt.id}
+                    onClick={() => setColorTheme(themeOpt.id as any)}
+                    className={cn(
+                      "flex flex-col items-center justify-center py-3 px-1 rounded-2xl border transition-all duration-300 active:scale-95 cursor-pointer",
+                      isActive 
+                        ? "border-nike-volt bg-nike-volt/5 text-white" 
+                        : "bg-black/40 border-white/5 text-white/40 hover:border-white/10"
+                    )}
+                  >
+                    <div className={cn("w-5 h-5 rounded-full shadow-inner mb-2 shrink-0", themeOpt.colorClass)} />
+                    <span className="text-[8px] font-black italic tracking-tighter uppercase leading-none">{themeOpt.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           <div className="bg-[#111111] border border-white/5 rounded-[32px] p-5 flex items-center justify-between mt-4">
