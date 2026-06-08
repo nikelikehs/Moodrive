@@ -1183,7 +1183,7 @@ export const MainMap: React.FC = () => {
           <button 
             onClick={triggerVoiceAssistant}
             className={cn(
-              "absolute right-6 w-14 h-14 rounded-2xl flex items-center justify-center z-[70] active:scale-90 transition-all bottom-[248px]",
+              "absolute right-6 w-14 h-14 rounded-2xl flex items-center justify-center z-[70] active:scale-90 transition-all bottom-[248px] pointer-events-auto",
               aiStatus === 'LISTENING' 
                 ? "bg-nike-volt text-black shadow-[0_0_15px_rgba(204,255,0,0.6)] animate-pulse" 
                 : "bg-[#111111]/90 backdrop-blur-xl border border-white/10 text-nike-volt"
@@ -1199,7 +1199,7 @@ export const MainMap: React.FC = () => {
             onClick={() => {
               if (map) map.panTo(new kakao.maps.LatLng(currentPos.lat, currentPos.lng));
             }}
-            className="absolute right-6 w-14 h-14 bg-[#111111]/90 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center z-[70] active:scale-90 transition-all text-nike-volt bottom-[176px]"
+            className="absolute right-6 w-14 h-14 bg-[#111111]/90 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center z-[70] active:scale-90 transition-all text-nike-volt bottom-[176px] pointer-events-auto"
           >
             <Navigation size={26} className="fill-none" />
           </button>
@@ -1209,7 +1209,7 @@ export const MainMap: React.FC = () => {
         {!isNavigating && (
           <button 
             onClick={startSafetyDrive}
-            className="absolute right-6 w-14 h-14 bg-[#111111]/90 backdrop-blur-xl border border-white/10 rounded-2xl flex flex-col items-center justify-center z-[70] active:scale-90 transition-all text-nike-volt bottom-[104px]"
+            className="absolute right-6 w-14 h-14 bg-[#111111]/90 backdrop-blur-xl border border-white/10 rounded-2xl flex flex-col items-center justify-center z-[70] active:scale-90 transition-all text-nike-volt bottom-[104px] pointer-events-auto"
             title="안전주행 모드"
           >
             <Shield size={20} className="fill-nike-volt/10" />
@@ -1219,7 +1219,7 @@ export const MainMap: React.FC = () => {
 
         {/* Naver Map Style Floating Circular Button Stack in Safety Driving Mode */}
         {isSafetyDriveMode && (
-          <div className="absolute right-6 top-[180px] z-[80] flex flex-col items-center gap-3.5 animate-in fade-in slide-in-from-right-4 duration-300">
+          <div className="absolute right-6 top-[180px] z-[80] flex flex-col items-center gap-3.5 animate-in fade-in slide-in-from-right-4 duration-300 pointer-events-auto">
             {/* 1. Voice Mic Button */}
             <button 
               onClick={triggerVoiceAssistant}
@@ -1321,7 +1321,7 @@ export const MainMap: React.FC = () => {
               setSimSegment('NONE');
               setIsStatsMinimized(false);
             }}
-            className="absolute right-6 top-[136px] z-[100] bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-2xl text-[10px] font-black italic uppercase tracking-wider shadow-2xl active:scale-95 transition-all flex items-center gap-1.5"
+            className="absolute right-6 top-[136px] z-[100] bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-2xl text-[10px] font-black italic uppercase tracking-wider shadow-2xl active:scale-95 transition-all flex items-center gap-1.5 pointer-events-auto"
             title="운행 종료"
           >
             <X size={12} strokeWidth={3} />

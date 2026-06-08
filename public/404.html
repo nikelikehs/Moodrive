@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Moodrive</title>
+    <script type="text/javascript">
+      var path = window.location.pathname;
+      var base = "/Moodrive";
+      var route = path.startsWith(base) ? path.substring(base.length) : path;
+      window.location.replace(window.location.origin + base + "/#" + route + window.location.search + window.location.hash);
+    </script>
+  </head>
+  <body>
+    Redirecting...
+  </body>
+</html>
