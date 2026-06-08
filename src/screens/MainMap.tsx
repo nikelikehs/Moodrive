@@ -1791,7 +1791,7 @@ export const MainMap: React.FC = () => {
         <div className="absolute top-20 left-6 right-6 z-[80] space-y-4 pointer-events-none text-left">
           {selectedPlace !== null && activeSearchField === 'none' ? (
             /* Route Planner Dual-Input Card */
-            <div className="bg-[#111111]/95 backdrop-blur-xl border border-white/10 p-5 rounded-[32px] pointer-events-auto shadow-2xl flex flex-col gap-3 relative animate-in slide-in-from-top-6 duration-300">
+            <div className="bg-[#111111]/95 backdrop-blur-xl border border-white/10 p-5 rounded-[32px] pointer-events-auto shadow-2xl flex flex-col gap-3 relative animate-in slide-in-from-top-6 duration-300 md:max-w-md md:mx-auto w-full">
               {/* Top row with Back button and Title */}
               <div className="flex items-center gap-3 pb-2 border-b border-white/5">
                 <button 
@@ -1868,7 +1868,7 @@ export const MainMap: React.FC = () => {
             </div>
           ) : (
             /* Standard Search Bar or Active Search mode input */
-            <div className="flex items-center gap-3 bg-[#111111]/95 backdrop-blur-xl border border-white/10 p-2 pl-3 rounded-[24px] pointer-events-auto shadow-2xl">
+            <div className="flex items-center gap-3 bg-[#111111]/95 backdrop-blur-xl border border-white/10 p-2 pl-3 rounded-[24px] pointer-events-auto shadow-2xl md:max-w-md md:mx-auto w-full">
               {activeSearchField !== 'none' ? (
                 <button 
                   onClick={() => {
@@ -1908,7 +1908,7 @@ export const MainMap: React.FC = () => {
           )}
 
           {!selectedPlace && searchResults.length === 0 && (
-            <div className="flex gap-3 overflow-x-auto no-scrollbar py-2 pointer-events-auto mt-2 active:cursor-grabbing">
+            <div className="flex gap-3 overflow-x-auto no-scrollbar py-2 pointer-events-auto mt-2 active:cursor-grabbing md:justify-center md:flex-wrap md:overflow-x-visible">
               {[
                 { id: 'fuel', icon: Fuel, label: 'GAS' },
                 { id: 'food', icon: Utensils, label: 'FOOD' },
@@ -1920,10 +1920,10 @@ export const MainMap: React.FC = () => {
                 <button 
                   key={cat.id} 
                   onClick={() => handleSearch(cat.label, true)} 
-                  className="flex items-center gap-3 bg-[#111111]/85 backdrop-blur-md border border-white/5 px-6 py-4 rounded-[22px] shrink-0 hover:border-nike-volt/40 transition-all active:scale-90"
+                  className="flex items-center gap-3 bg-[#111111]/85 backdrop-blur-md border border-white/5 px-6 py-4 md:px-8 md:py-5 rounded-[22px] md:rounded-[26px] shrink-0 hover:border-nike-volt/40 transition-all active:scale-90"
                 >
-                  <cat.icon className="text-nike-volt" size={18} />
-                  <span className="text-[11px] font-black italic text-white uppercase tracking-tighter">{cat.label}</span>
+                  <cat.icon className="text-nike-volt w-[18px] h-[18px] md:w-[22px] md:h-[22px]" />
+                  <span className="text-[11px] md:text-[13px] font-black italic text-white uppercase tracking-tighter">{cat.label}</span>
                 </button>
               ))}
             </div>
