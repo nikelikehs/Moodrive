@@ -2157,12 +2157,13 @@ export const MainMap: React.FC = () => {
 
       {/* Selected Place Details Card for Safety Driving Mode */}
       {isSafetyDriveMode && selectedPlace && (
-        <div className="absolute bottom-[148px] left-6 right-6 z-[70] bg-[#111111]/95 border border-white/10 rounded-2xl p-3 flex justify-between items-center shadow-2xl animate-in slide-in-from-bottom-2 duration-300 pointer-events-auto">
+        <div className="absolute bottom-[148px] left-6 right-6 z-[70] bg-[#111111]/95 border border-white/10 rounded-2xl p-3 flex justify-between items-center shadow-2xl animate-in slide-in-from-bottom-2 duration-300 pointer-events-auto md:max-w-md md:mx-auto w-full">
           <div className="flex-1 min-w-0 text-left pl-1">
             <h4 className="text-xs font-black text-white truncate">{selectedPlace.place_name}</h4>
             <p className="text-[9px] text-white/40 font-bold truncate mt-0.5">{selectedPlace.road_address_name || selectedPlace.address_name}</p>
           </div>
-          <div className="flex items-center gap-2 ml-3 shrink-0">
+          <div className="flex items-center gap-1.5 ml-3 shrink-0">
+            {/* 주행 모드 (Direct Driving Simulation within Safety Driving Mode) */}
             <button 
               onClick={async () => {
                 setIsSafetyDriveMode(true);
@@ -2170,7 +2171,7 @@ export const MainMap: React.FC = () => {
                 setIsNavigating(true);
                 setSimSegment('TRANSIT');
                 
-                voiceService.speak(`목적지 ${selectedPlace.place_name}까지 안내를 시작합니다.`);
+                voiceService.speak(`목적지 ${selectedPlace.place_name}까지 안전주행 안내를 시작합니다.`);
                 setSearchResults([]);
                 setSearchQuery("");
                 
@@ -2213,11 +2214,24 @@ export const MainMap: React.FC = () => {
                 setDestination(selectedPlace.place_name);
                 setSelectedPlace(null);
               }}
-              className="bg-nike-volt text-black px-3 py-1.5 rounded-xl text-[10px] font-black italic uppercase tracking-tighter hover:scale-105 active:scale-95 transition-all flex items-center gap-1"
+              className="bg-[#111111] text-nike-volt border border-nike-volt/30 px-2.5 py-1.5 rounded-xl text-[10px] font-black italic uppercase tracking-tighter hover:scale-105 active:scale-95 transition-all flex items-center gap-1 shrink-0"
+            >
+              <Shield size={10} className="fill-nike-volt/10" />
+              주행 모드
+            </button>
+
+            {/* 안내 시작 (Switch to Route Options Preview) */}
+            <button 
+              onClick={() => {
+                setIsSafetyDriveMode(false);
+                selectPlace(selectedPlace);
+              }}
+              className="bg-nike-volt text-black px-2.5 py-1.5 rounded-xl text-[10px] font-black italic uppercase tracking-tighter hover:scale-105 active:scale-95 transition-all flex items-center gap-1 shrink-0"
             >
               <Navigation2 size={10} className="fill-black" />
               안내 시작
             </button>
+
             <button 
               onClick={() => setSelectedPlace(null)}
               className="w-7 h-7 bg-white/5 rounded-full flex items-center justify-center text-white/40 hover:text-white"
