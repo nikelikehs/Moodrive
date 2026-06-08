@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { MobileLayout } from './layouts/MobileLayout';
 import { Splash } from './screens/Splash';
 import { Login } from './screens/Login';
@@ -14,7 +14,7 @@ import { DriveLog } from './screens/DriveLog';
 
 function App() {
   return (
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <HashRouter>
       <Routes>
         {/* Auth flow without bottom nav */}
         <Route path="/" element={<Login />} />
@@ -39,7 +39,7 @@ function App() {
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
