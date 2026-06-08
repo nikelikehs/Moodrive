@@ -13,7 +13,8 @@ import {
   Moon, 
   Map, 
   Navigation, 
-  Trash2
+  Trash2,
+  MessageSquare
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../layouts/MobileLayout';
@@ -58,6 +59,20 @@ export const Settings: React.FC = () => {
   const [selectedPersonaId, setSelectedPersonaId] = useState(() => localStorage.getItem('moodrive_selected_persona_id') || 'nike_male');
   const [voiceRate, setVoiceRate] = useState(() => localStorage.getItem('moodrive_voice_rate') || '1.0');
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(() => localStorage.getItem('moodrive_voice_enabled') !== 'false');
+
+  // AI Chatbot Settings state
+  const [aiPersona, setAiPersona] = useState(() => localStorage.getItem('moodrive_ai_persona') || 'standard');
+  const [aiTemperature, setAiTemperature] = useState(() => parseFloat(localStorage.getItem('moodrive_ai_temperature') || '0.7'));
+
+  const handleSetAiPersona = (persona: string) => {
+    setAiPersona(persona);
+    localStorage.setItem('moodrive_ai_persona', persona);
+  };
+
+  const handleSetAiTemperature = (temp: number) => {
+    setAiTemperature(temp);
+    localStorage.setItem('moodrive_ai_temperature', String(temp));
+  };
 
   const handleLogout = async () => {
     try {
@@ -519,6 +534,73 @@ export const Settings: React.FC = () => {
             >
               Save API Key
             </button>
+          </div>
+        </div>
+
+        {/* AI Chatbot Settings */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-3 px-2">
+            <MessageSquare className="text-nike-volt" size={18} />
+            <h2 className="text-[10px] font-black tracking-widest text-white/40 uppercase">AI 비서 설정</h2>
+          </div>
+          
+          <div className="bg-[#111111] border border-white/5 rounded-[32px] p-5 space-y-5">
+            {/* AI Persona/Tone selector */}
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-white/50 pl-1">AI 채팅 캐릭터 말투</label>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { id: 'standard', name: '일반/친절', desc: '친절하고 센스 있는 안내' },
+                  { id: 'energetic', name: '열정 코치', desc: '활기차고 터프한 반말 코치' },
+                  { id: 'calm', name: '감성/위로', desc: '나긋나긋하고 따뜻한 어조' },
+                  { id: 'technical', name: '테크/분석', desc: '데이터 위주의 건조한 존댓말' }
+                ].map((persona) => {
+                  const isSelected = aiPersona === persona.id;
+                  return (
+                    <button
+                      key={persona.id}
+                      onClick={() => handleSetAiPersona(persona.id)}
+                      className={cn(
+                        "p-3 rounded-2xl border text-left flex flex-col justify-between transition-all active:scale-[0.98] h-[72px]",
+                        isSelected 
+                          ? "border-nike-volt bg-nike-volt/5 text-white" 
+                          : "border-white/5 bg-black/40 text-white/60 hover:border-white/10"
+                      )}
+                    >
+                      <span className={cn("text-xs font-black italic", isSelected ? "text-nike-volt" : "text-white")}>
+                        {persona.name}
+                      </span>
+                      <span className="text-[8px] text-white/40 mt-1 leading-snug">{persona.desc}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* AI Temperature settings */}
+            <div className="space-y-2 pt-2 border-t border-white/5">
+              <label className="text-[10px] font-bold text-white/50 pl-1">답변 스타일 (AI 창의성 온도)</label>
+              <div className="grid grid-cols-3 gap-2 bg-black p-1 rounded-2xl border border-white/5">
+                {[
+                  { value: 0.2, label: '이성적/단답형' },
+                  { value: 0.7, label: '균형 잡힌' },
+                  { value: 1.0, label: '창의적/풍부한' }
+                ].map((item) => (
+                  <button
+                    key={item.value}
+                    onClick={() => handleSetAiTemperature(item.value)}
+                    className={cn(
+                      "py-2 rounded-xl text-[10px] font-black tracking-tight transition-all active:scale-[0.98]",
+                      aiTemperature === item.value
+                        ? "bg-nike-volt text-black"
+                        : "text-white/50 hover:text-white"
+                    )}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
