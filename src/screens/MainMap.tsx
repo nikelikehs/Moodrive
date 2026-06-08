@@ -1955,7 +1955,7 @@ export const MainMap: React.FC = () => {
         </div>
       )}
 
-      {searchResults.length > 0 && !isNavigating && (
+      {((searchResults.length > 0 || selectedPlace) && !isNavigating) && (
         <div className="absolute bottom-28 left-6 right-6 z-[80] bg-[#111111]/95 border border-white/10 rounded-[32px] flex flex-col max-h-[60vh] overflow-hidden animate-in slide-in-from-bottom-6">
           {(!selectedPlace || activeSearchField !== 'none') && (
             <div className="flex items-center px-4 py-4 border-b border-white/5 gap-3">
@@ -2106,7 +2106,13 @@ export const MainMap: React.FC = () => {
                   </div>
 
                   <button 
-                    onClick={() => {
+                    onClick={async () => {
+                      if (coursePolylinePath.length > 0) {
+                        const courseStart = coursePolylinePath[0];
+                        const courseEnd = coursePolylinePath[coursePolylinePath.length - 1];
+                        await getCourseRoute(courseStart, courseEnd, transportMode);
+                      }
+
                       const routeOption = localStorage.getItem('moodrive_nav_route_option') || 'RECOMMEND';
                       const tollMultiplier = routeOption === 'TOLL_FREE' ? 0 : (routeOption === 'SHORTEST' ? 0.7 : 1.0);
 
