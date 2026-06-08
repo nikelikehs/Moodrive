@@ -25,7 +25,8 @@ import {
   Train,
   Car,
   Compass,
-  Shield
+  Shield,
+  ParkingCircle
 } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Map, CustomOverlayMap, useKakaoLoader, Polyline } from 'react-kakao-maps-sdk';
@@ -1910,16 +1911,16 @@ export const MainMap: React.FC = () => {
           {!selectedPlace && searchResults.length === 0 && (
             <div className="flex gap-3 overflow-x-auto no-scrollbar py-2 pointer-events-auto mt-2 active:cursor-grabbing md:justify-center md:flex-wrap md:overflow-x-visible">
               {[
-                { id: 'fuel', icon: Fuel, label: 'GAS' },
-                { id: 'food', icon: Utensils, label: 'FOOD' },
-                { id: 'hotel', icon: Bed, label: 'STAY' },
-                { id: 'sight', icon: Landmark, label: 'VIEW' },
-                { id: 'cafe', icon: Clock, label: 'CAFE' },
-                { id: 'parking', icon: MapPin, label: 'PARK' }
+                { id: 'fuel', icon: Fuel, label: 'GAS', query: '주유소' },
+                { id: 'food', icon: Utensils, label: 'FOOD', query: '맛집' },
+                { id: 'hotel', icon: Bed, label: 'STAY', query: '호텔' },
+                { id: 'cafe', icon: Clock, label: 'CAFE', query: '카페' },
+                { id: 'free_parking', icon: ParkingCircle, label: 'FREE PARK', query: '무료 주차장' },
+                { id: 'paid_parking', icon: ParkingCircle, label: 'PAID PARK', query: '주차장' }
               ].map((cat) => (
                 <button 
                   key={cat.id} 
-                  onClick={() => handleSearch(cat.label, true)} 
+                  onClick={() => handleSearch(cat.query, true)} 
                   className="flex items-center gap-3 bg-[#111111]/85 backdrop-blur-md border border-white/5 px-6 py-4 md:px-8 md:py-5 rounded-[22px] md:rounded-[26px] shrink-0 hover:border-nike-volt/40 transition-all active:scale-90"
                 >
                   <cat.icon className="text-nike-volt w-[18px] h-[18px] md:w-[22px] md:h-[22px]" />
