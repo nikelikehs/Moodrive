@@ -279,70 +279,72 @@ export const Garage: React.FC = () => {
   if (selectedModel) {
     const details = getCarDetails(selectedMake || "", selectedModel.Model_Name);
     return (
-      <div className="w-full h-full flex flex-col bg-[#F5F5F7] text-black px-6 pt-10 pb-24 font-sans transition-colors duration-300">
-        <div className="flex items-center justify-between mb-6 shrink-0">
-          <button 
-            onClick={() => setSelectedModel(null)}
-            className="w-10 h-10 bg-white border border-black/10 rounded-full flex items-center justify-center text-black hover:bg-black/5 transition-all active:scale-90"
-          >
-            <ArrowLeft size={20} className="text-black" />
-          </button>
-          <div className="flex flex-col items-end text-right">
-            <span className="text-[10px] font-mono text-black/40 font-bold tracking-widest uppercase">Specification</span>
-            <span className="text-xs font-bold text-black/60">#{selectedModel.Model_ID}</span>
-          </div>
-        </div>
-
-        <div className="flex-1 overflow-y-auto no-scrollbar space-y-6">
-          {/* Car Image Header */}
-          <div className="relative w-full h-48 rounded-3xl overflow-hidden border border-black/10 group shadow-lg shrink-0">
-            <img 
-              src={details.image} 
-              alt={selectedModel.Model_Name} 
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-            <div className="absolute bottom-4 left-5 right-5 text-left">
-              <span className="text-[9px] font-black uppercase text-white bg-black/40 border border-white/20 px-2 py-0.5 rounded">
-                {selectedMake}
-              </span>
-              <h3 className="text-xl font-black italic text-white uppercase tracking-tighter mt-2 leading-none">
-                {selectedModel.Model_Name}
-              </h3>
+      <div className="w-full h-full flex flex-col bg-[#F5F5F7] text-black px-6 pt-10 pb-24 font-sans transition-colors duration-300 overflow-hidden">
+        <div className="max-w-2xl mx-auto w-full flex flex-col flex-1 overflow-hidden">
+          <div className="flex items-center justify-between mb-6 shrink-0">
+            <button 
+              onClick={() => setSelectedModel(null)}
+              className="w-10 h-10 bg-white border border-black/10 rounded-full flex items-center justify-center text-black hover:bg-black/5 transition-all active:scale-90"
+            >
+              <ArrowLeft size={20} className="text-black" />
+            </button>
+            <div className="flex flex-col items-end text-right">
+              <span className="text-[10px] font-mono text-black/40 font-bold tracking-widest uppercase">Specification</span>
+              <span className="text-xs font-bold text-black/60">#{selectedModel.Model_ID}</span>
             </div>
           </div>
 
-          {/* Specs List Grid (Naver Car Search Style) */}
-          <div className="space-y-3 text-left">
-            <h4 className="text-[11px] font-black uppercase tracking-widest text-black/50 border-b border-black/10 pb-2">제원 및 가격 정보</h4>
-            
-            <div className="grid grid-cols-2 gap-2.5">
-              {[
-                { label: '가격 (Price)', value: details.price },
-                { label: '구동 방식 (Drivetrain)', value: details.drivetrain },
-                { label: '엔진 형식 (Engine)', value: details.engineType },
-                { label: '배기량 (Displacement)', value: details.displacement },
-                { label: '연료 (Fuel Type)', value: details.fuelType },
-                { label: '연비 (Efficiency)', value: details.fuelEfficiency },
-                { label: '변속기 (Transmission)', value: details.transmission },
-                { label: '최고 출력 (Power)', value: details.power },
-                { label: '최대 토크 (Torque)', value: details.torque }
-              ].map((item, idx) => (
-                <div key={idx} className="bg-white p-3.5 rounded-2xl border border-black/5 flex flex-col justify-between min-h-[66px] shadow-sm">
-                  <span className="text-[8px] font-bold text-black/40 uppercase tracking-wider">{item.label}</span>
-                  <span className="text-[11px] font-black text-black mt-1 leading-tight">{item.value}</span>
-                </div>
-              ))}
+          <div className="flex-1 overflow-y-auto no-scrollbar space-y-6">
+            {/* Car Image Header */}
+            <div className="relative w-full h-48 rounded-3xl overflow-hidden border border-black/10 group shadow-lg shrink-0">
+              <img 
+                src={details.image} 
+                alt={selectedModel.Model_Name} 
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+              <div className="absolute bottom-4 left-5 right-5 text-left">
+                <span className="text-[9px] font-black uppercase text-white bg-black/40 border border-white/20 px-2 py-0.5 rounded">
+                  {selectedMake}
+                </span>
+                <h3 className="text-xl font-black italic text-white uppercase tracking-tighter mt-2 leading-none">
+                  {selectedModel.Model_Name}
+                </h3>
+              </div>
             </div>
-          </div>
 
-          {/* Drive Mode Vibe Suggestion */}
-          <div className="bg-white border border-black/10 rounded-2xl p-5 text-left space-y-2 shadow-sm">
-            <h5 className="text-[10px] font-black text-black uppercase tracking-wider">MooDrive Vibe 추천 코스</h5>
-            <p className="text-xs font-bold text-black/70 leading-relaxed">
-              {selectedMake} {selectedModel.Model_Name}의 {details.drivetrain} 및 {details.engineType} 파워트레인은 와인딩 드라이브에 뛰어난 퍼포먼스를 보여줍니다. 
-              시원한 가속력과 견고한 트랙션을 체감해 볼 수 있는 <strong>청주 대청호반 드라이브 코스</strong>나 <strong>단양 보발재 고갯길</strong> 와인딩 드라이브 코스를 추천합니다!
-            </p>
+            {/* Specs List Grid (Naver Car Search Style) */}
+            <div className="space-y-3 text-left">
+              <h4 className="text-[11px] font-black uppercase tracking-widest text-black/50 border-b border-black/10 pb-2">제원 및 가격 정보</h4>
+              
+              <div className="grid grid-cols-2 gap-2.5">
+                {[
+                  { label: '가격 (Price)', value: details.price },
+                  { label: '구동 방식 (Drivetrain)', value: details.drivetrain },
+                  { label: '엔진 형식 (Engine)', value: details.engineType },
+                  { label: '배기량 (Displacement)', value: details.displacement },
+                  { label: '연료 (Fuel Type)', value: details.fuelType },
+                  { label: '연비 (Efficiency)', value: details.fuelEfficiency },
+                  { label: '변속기 (Transmission)', value: details.transmission },
+                  { label: '최고 출력 (Power)', value: details.power },
+                  { label: '최대 토크 (Torque)', value: details.torque }
+                ].map((item, idx) => (
+                  <div key={idx} className="bg-white p-3.5 rounded-2xl border border-black/5 flex flex-col justify-between min-h-[66px] shadow-sm">
+                    <span className="text-[8px] font-bold text-black/40 uppercase tracking-wider">{item.label}</span>
+                    <span className="text-[11px] font-black text-black mt-1 leading-tight">{item.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Drive Mode Vibe Suggestion */}
+            <div className="bg-white border border-black/10 rounded-2xl p-5 text-left space-y-2 shadow-sm">
+              <h5 className="text-[10px] font-black text-black uppercase tracking-wider">MooDrive Vibe 추천 코스</h5>
+              <p className="text-xs font-bold text-black/70 leading-relaxed">
+                {selectedMake} {selectedModel.Model_Name}의 {details.drivetrain} 및 {details.engineType} 파워트레인은 와인딩 드라이브에 뛰어난 퍼포먼스를 보여줍니다. 
+                시원한 가속력과 견고한 트랙션을 체감해 볼 수 있는 <strong>청주 대청호반 드라이브 코스</strong>나 <strong>단양 보발재 고갯길</strong> 와인딩 드라이브 코스를 추천합니다!
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -350,86 +352,88 @@ export const Garage: React.FC = () => {
   }
 
   return (
-    <div className="w-full h-full flex flex-col bg-[#F5F5F7] text-black px-6 pt-10 pb-24 font-sans transition-colors duration-300">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h2 className="text-3xl font-black italic tracking-tighter uppercase leading-none" style={{ fontFamily: 'Hanken Grotesk' }}>
-            {selectedMake ? selectedMake : "Garage"}
-          </h2>
-          <p className="text-black/40 font-mono text-[10px] mt-1 uppercase tracking-widest font-bold">
-            {selectedMake ? "Models Discovery" : "Brand Catalog"}
-          </p>
-        </div>
-        {!selectedMake ? (
-           <Car className="text-black" size={32} />
-        ) : (
-          <button 
-            onClick={() => { setSelectedMake(null); setSelectedModel(null); }}
-            className="w-10 h-10 bg-white border border-black/10 rounded-full flex items-center justify-center text-black transition-colors"
-          >
-            <ArrowLeft size={20} />
-          </button>
-        )}
-      </div>
-
-      {!selectedMake && (
-        <div className="relative mb-6">
-          <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-            <Search size={18} className="text-black/40" />
+    <div className="w-full h-full flex flex-col bg-[#F5F5F7] text-black px-6 pt-10 pb-24 font-sans transition-colors duration-300 overflow-hidden">
+      <div className="max-w-2xl mx-auto w-full flex flex-col flex-1 overflow-hidden">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-3xl font-black italic tracking-tighter uppercase leading-none" style={{ fontFamily: 'Hanken Grotesk' }}>
+              {selectedMake ? selectedMake : "Garage"}
+            </h2>
+            <p className="text-black/40 font-mono text-[10px] mt-1 uppercase tracking-widest font-bold">
+              {selectedMake ? "Models Discovery" : "Brand Catalog"}
+            </p>
           </div>
-          <input 
-            type="text"
-            placeholder="Search brands..."
-            className="w-full h-12 bg-white border border-black/10 rounded-xl px-12 text-sm focus:outline-none focus:border-black/30 transition-all font-bold text-black placeholder:text-black/30"
-            value={search}
-            onChange={(e) => handleSearch(e.target.value)}
-          />
+          {!selectedMake ? (
+             <Car className="text-black" size={32} />
+          ) : (
+            <button 
+              onClick={() => { setSelectedMake(null); setSelectedModel(null); }}
+              className="w-10 h-10 bg-white border border-black/10 rounded-full flex items-center justify-center text-black transition-colors"
+            >
+              <ArrowLeft size={20} />
+            </button>
+          )}
         </div>
-      )}
 
-      <div className="flex-1 overflow-y-auto no-scrollbar space-y-3">
-        {loading ? (
-          <div className="flex flex-col items-center justify-center h-40">
-            <Loader2 className="text-black animate-spin mb-2" size={32} />
-            <p className="text-xs font-mono text-black/40 uppercase font-bold">Fetching data...</p>
+        {!selectedMake && (
+          <div className="relative mb-6">
+            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+              <Search size={18} className="text-black/40" />
+            </div>
+            <input 
+              type="text"
+              placeholder="Search brands..."
+              className="w-full h-12 bg-white border border-black/10 rounded-xl px-12 text-sm focus:outline-none focus:border-black/30 transition-all font-bold text-black placeholder:text-black/30"
+              value={search}
+              onChange={(e) => handleSearch(e.target.value)}
+            />
           </div>
-        ) : !selectedMake ? (
-          filteredMakes.map((make) => (
-            <button 
-              key={make.Make_ID}
-              onClick={() => fetchModels(make.Make_Name)}
-              className="w-full h-16 bg-white border border-black/5 rounded-xl px-5 flex items-center justify-between hover:bg-black/5 transition-all group active:scale-[0.98] shadow-sm text-black"
-            >
-              <span className="text-sm font-black uppercase tracking-tight text-black transition-colors">
-                {make.Make_Name}
-              </span>
-              <ChevronRight size={20} className="text-black/40 group-hover:text-black transition-colors" />
-            </button>
-          ))
-        ) : (
-          models.map((model) => (
-            <button 
-              key={model.Model_ID}
-              onClick={() => setSelectedModel(model)}
-              className="w-full p-5 bg-white border border-black/5 rounded-2xl flex flex-col text-left hover:border-black/20 transition-all active:scale-[0.98] group shadow-sm text-black"
-            >
-              <div className="flex items-center justify-between mb-2 w-full">
-                <span className="text-[10px] font-mono text-black/40 font-bold tracking-widest uppercase">
-                  Model
-                </span>
-                <span className="text-[10px] font-mono text-black/30">
-                  #{model.Model_ID}
-                </span>
-              </div>
-              <div className="flex justify-between items-center w-full">
-                <h3 className="text-lg font-black italic tracking-tighter uppercase text-black transition-colors">
-                  {model.Model_Name}
-                </h3>
-                <ChevronRight size={18} className="text-black/40 group-hover:text-black transition-all group-hover:translate-x-1" />
-              </div>
-            </button>
-          ))
         )}
+
+        <div className="flex-1 overflow-y-auto no-scrollbar space-y-3">
+          {loading ? (
+            <div className="flex flex-col items-center justify-center h-40">
+              <Loader2 className="text-black animate-spin mb-2" size={32} />
+              <p className="text-xs font-mono text-black/40 uppercase font-bold">Fetching data...</p>
+            </div>
+          ) : !selectedMake ? (
+            filteredMakes.map((make) => (
+              <button 
+                key={make.Make_ID}
+                onClick={() => fetchModels(make.Make_Name)}
+                className="w-full h-16 bg-white border border-black/5 rounded-xl px-5 flex items-center justify-between hover:bg-black/5 transition-all group active:scale-[0.98] shadow-sm text-black"
+              >
+                <span className="text-sm font-black uppercase tracking-tight text-black transition-colors">
+                  {make.Make_Name}
+                </span>
+                <ChevronRight size={20} className="text-black/40 group-hover:text-black transition-colors" />
+              </button>
+            ))
+          ) : (
+            models.map((model) => (
+              <button 
+                key={model.Model_ID}
+                onClick={() => setSelectedModel(model)}
+                className="w-full p-5 bg-white border border-black/5 rounded-2xl flex flex-col text-left hover:border-black/20 transition-all active:scale-[0.98] group shadow-sm text-black"
+              >
+                <div className="flex items-center justify-between mb-2 w-full">
+                  <span className="text-[10px] font-mono text-black/40 font-bold tracking-widest uppercase">
+                    Model
+                  </span>
+                  <span className="text-[10px] font-mono text-black/30">
+                    #{model.Model_ID}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center w-full">
+                  <h3 className="text-lg font-black italic tracking-tighter uppercase text-black transition-colors">
+                    {model.Model_Name}
+                  </h3>
+                  <ChevronRight size={18} className="text-black/40 group-hover:text-black transition-all group-hover:translate-x-1" />
+                </div>
+              </button>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

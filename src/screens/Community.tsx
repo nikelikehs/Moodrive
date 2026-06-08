@@ -317,42 +317,44 @@ export const Community: React.FC = () => {
       
       {/* HEADER SECTION */}
       <div className="px-6 pt-10 pb-6 bg-[#0a0a0a] border-b border-white/5 sticky top-0 z-30 flex flex-col">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h2 className="text-3xl font-black italic tracking-tighter uppercase leading-none text-white">COMMUNITY</h2>
-            <p className="text-nike-volt font-mono text-[9px] mt-1.5 uppercase tracking-widest font-black">Share the thrill, run the road</p>
+        <div className="max-w-2xl mx-auto w-full flex flex-col">
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h2 className="text-3xl font-black italic tracking-tighter uppercase leading-none text-white">COMMUNITY</h2>
+              <p className="text-nike-volt font-mono text-[9px] mt-1.5 uppercase tracking-widest font-black">Share the thrill, run the road</p>
+            </div>
+            <button 
+               onClick={() => activeTab === 'FEED' ? setShowCreatePostModal(true) : setShowCreateRoomModal(true)}
+               className="w-12 h-12 bg-nike-volt rounded-2xl flex items-center justify-center text-black shadow-lg hover:scale-105 active:scale-95 transition-all duration-300"
+            >
+              <Plus size={24} strokeWidth={2.5} />
+            </button>
           </div>
-          <button 
-             onClick={() => activeTab === 'FEED' ? setShowCreatePostModal(true) : setShowCreateRoomModal(true)}
-             className="w-12 h-12 bg-nike-volt rounded-2xl flex items-center justify-center text-black shadow-lg hover:scale-105 active:scale-95 transition-all duration-300"
-          >
-            <Plus size={24} strokeWidth={2.5} />
-          </button>
-        </div>
 
-        {/* TAB SWITCHER */}
-        <div className="flex bg-[#111111] p-1 rounded-2xl border border-white/5">
-          <button 
-            onClick={() => setActiveTab('FEED')}
-            className={`flex-1 py-3.5 rounded-xl text-[11px] font-black italic uppercase tracking-widest transition-all duration-300 ${
-              activeTab === 'FEED' ? 'bg-[#1e1e1e] text-nike-volt shadow-lg border border-white/5' : 'text-white/40 hover:text-white'
-            }`}
-          >
-            Road Feed
-          </button>
-          <button 
-            onClick={() => setActiveTab('CHANNELS')}
-            className={`flex-1 py-3.5 rounded-xl text-[11px] font-black italic uppercase tracking-widest transition-all duration-300 ${
-              activeTab === 'CHANNELS' ? 'bg-[#1e1e1e] text-nike-volt shadow-lg border border-white/5' : 'text-white/40 hover:text-white'
-            }`}
-          >
-            Live Channels
-          </button>
+          {/* TAB SWITCHER */}
+          <div className="flex bg-[#111111] p-1 rounded-2xl border border-white/5">
+            <button 
+              onClick={() => setActiveTab('FEED')}
+              className={`flex-1 py-3.5 rounded-xl text-[11px] font-black italic uppercase tracking-widest transition-all duration-300 ${
+                activeTab === 'FEED' ? 'bg-[#1e1e1e] text-nike-volt shadow-lg border border-white/5' : 'text-white/40 hover:text-white'
+              }`}
+            >
+              Road Feed
+            </button>
+            <button 
+              onClick={() => setActiveTab('CHANNELS')}
+              className={`flex-1 py-3.5 rounded-xl text-[11px] font-black italic uppercase tracking-widest transition-all duration-300 ${
+                activeTab === 'CHANNELS' ? 'bg-[#1e1e1e] text-nike-volt shadow-lg border border-white/5' : 'text-white/40 hover:text-white'
+              }`}
+            >
+              Live Channels
+            </button>
+          </div>
         </div>
       </div>
 
       {/* MAIN CONTENT AREA */}
-      <div className="flex-1 overflow-y-auto no-scrollbar pb-32 px-5 py-6">
+      <div className="flex-1 overflow-y-auto no-scrollbar pb-32 px-5 py-6 max-w-2xl mx-auto w-full">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-32 space-y-4">
              <div className="w-12 h-12 rounded-full border-4 border-nike-volt/20 border-t-nike-volt animate-spin"></div>
@@ -574,61 +576,65 @@ export const Community: React.FC = () => {
            
            {/* Chat Header */}
            <div className="px-6 pt-10 pb-6 border-b border-white/5 flex items-center justify-between shrink-0 bg-[#0a0a0a]">
-              <div className="flex items-center gap-3">
-                 <button 
-                   onClick={() => setSelectedRoom(null)} 
-                   className="w-10 h-10 bg-white/5 rounded-2xl flex items-center justify-center text-white/60 hover:text-white active:scale-90 transition-transform"
-                 >
-                   <ArrowLeft size={20} />
-                 </button>
-                 <div className="text-left">
-                    <h3 className="text-base font-black italic uppercase tracking-tighter text-white leading-none">{selectedRoom.title}</h3>
-                    <p className="text-[9px] font-black text-nike-volt uppercase tracking-widest mt-1.5">Live • {selectedRoom.participants} Riders Online</p>
+              <div className="max-w-2xl mx-auto w-full flex items-center justify-between">
+                 <div className="flex items-center gap-3">
+                    <button 
+                      onClick={() => setSelectedRoom(null)} 
+                      className="w-10 h-10 bg-white/5 rounded-2xl flex items-center justify-center text-white/60 hover:text-white active:scale-90 transition-transform"
+                    >
+                      <ArrowLeft size={20} />
+                    </button>
+                    <div className="text-left">
+                       <h3 className="text-base font-black italic uppercase tracking-tighter text-white leading-none">{selectedRoom.title}</h3>
+                       <p className="text-[9px] font-black text-nike-volt uppercase tracking-widest mt-1.5">Live • {selectedRoom.participants} Riders Online</p>
+                    </div>
                  </div>
+                 <MoreHorizontal size={20} className="text-white/40" />
               </div>
-              <MoreHorizontal size={20} className="text-white/40" />
            </div>
            
            {/* Messages Scroll Area */}
            <div className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-5 bg-[#080808]">
-              {chatMessages.map((msg, i) => {
-                 const isMe = msg.authorName === nickname.trim().toUpperCase();
-                 const isSystem = msg.authorName === 'SYSTEM';
+              <div className="max-w-2xl mx-auto w-full flex flex-col space-y-5">
+                 {chatMessages.map((msg, i) => {
+                    const isMe = msg.authorName === nickname.trim().toUpperCase();
+                    const isSystem = msg.authorName === 'SYSTEM';
 
-                 if (isSystem) {
-                   return (
-                     <div key={msg.id || i} className="text-center py-2">
-                       <span className="text-[9px] font-bold uppercase tracking-wider text-white/20 bg-white/5 px-4 py-1.5 rounded-full border border-white/5">{msg.text}</span>
-                     </div>
-                   );
-                 }
-
-                 return (
-                   <div key={msg.id || i} className={`flex gap-3 items-end ${isMe ? 'flex-row-reverse text-right' : 'text-left'}`}>
-                      {/* Avatar */}
-                      {!isMe && (
-                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white/80 font-black text-[9px] shrink-0 border border-white/5 shadow-md">
-                          {msg.authorName.charAt(0)}
+                    if (isSystem) {
+                      return (
+                        <div key={msg.id || i} className="text-center py-2">
+                          <span className="text-[9px] font-bold uppercase tracking-wider text-white/20 bg-white/5 px-4 py-1.5 rounded-full border border-white/5">{msg.text}</span>
                         </div>
-                      )}
-                      
-                      <div className="flex flex-col max-w-[70%]">
-                         {!isMe && <span className="text-[9px] font-black text-white/40 uppercase mb-1.5 ml-1 tracking-wider">{msg.authorName}</span>}
-                         <div className={`p-4 rounded-3xl border text-xs font-bold leading-normal ${
-                           isMe 
-                             ? 'bg-nike-volt border-nike-volt text-black rounded-tr-none shadow-lg shadow-nike-volt/5' 
-                             : 'bg-[#111111] border-white/5 text-white/90 rounded-tl-none'
-                         }`}>
-                            <p className="whitespace-pre-wrap">{msg.text}</p>
+                      );
+                    }
+
+                    return (
+                      <div key={msg.id || i} className={`flex gap-3 items-end ${isMe ? 'flex-row-reverse text-right' : 'text-left'}`}>
+                         {/* Avatar */}
+                         {!isMe && (
+                           <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white/80 font-black text-[9px] shrink-0 border border-white/5 shadow-md">
+                             {msg.authorName.charAt(0)}
+                           </div>
+                         )}
+                         
+                         <div className="flex flex-col max-w-[70%]">
+                            {!isMe && <span className="text-[9px] font-black text-white/40 uppercase mb-1.5 ml-1 tracking-wider">{msg.authorName}</span>}
+                            <div className={`p-4 rounded-3xl border text-xs font-bold leading-normal ${
+                              isMe 
+                                ? 'bg-nike-volt border-nike-volt text-black rounded-tr-none shadow-lg shadow-nike-volt/5' 
+                                : 'bg-[#111111] border-white/5 text-white/90 rounded-tl-none'
+                            }`}>
+                               <p className="whitespace-pre-wrap">{msg.text}</p>
+                            </div>
+                            <span className="text-[8px] font-mono text-white/20 mt-1 px-1.5">
+                              {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </span>
                          </div>
-                         <span className="text-[8px] font-mono text-white/20 mt-1 px-1.5">
-                           {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                         </span>
                       </div>
-                   </div>
-                 );
-              })}
-              <div ref={chatEndRef} />
+                    );
+                 })}
+                 <div ref={chatEndRef} />
+              </div>
            </div>
 
            {/* Chat Input Footer */}
@@ -636,7 +642,7 @@ export const Community: React.FC = () => {
              onSubmit={handleSendChatMessage}
              className="p-5 border-t border-white/5 bg-[#0a0a0a] pb-10 shrink-0"
            >
-              <div className="flex gap-2.5 items-center bg-[#111111] p-2 rounded-2xl border border-white/5 focus-within:border-nike-volt/30 transition-colors">
+              <div className="max-w-2xl mx-auto w-full flex gap-2.5 items-center bg-[#111111] p-2 rounded-2xl border border-white/5 focus-within:border-nike-volt/30 transition-colors">
                  <input 
                    type="text" 
                    value={chatInput}

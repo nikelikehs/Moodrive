@@ -301,36 +301,38 @@ export const AIAssistant: React.FC = () => {
       <div className="flex-1 flex flex-col h-full relative overflow-hidden w-full">
         {/* Header */}
         <div className="flex px-5 py-8 items-center justify-between bg-[var(--bg-app)] border-b border-white/5 z-10 sticky top-0 shrink-0">
-          <div className="flex items-center">
-            <button 
-              onClick={() => setIsSidebarPinned(!isSidebarPinned)}
-              className={cn(
-                "w-12 h-12 rounded-xl flex items-center justify-center mr-4 active:scale-95 transition-all text-white",
-                isSidebarPinned ? "bg-nike-volt text-black" : "bg-white/5"
-              )}
-            >
-              <Menu size={24} />
-            </button>
-            <div className="text-left">
-              <h2 className="text-xl font-black italic tracking-tighter uppercase text-[var(--text-main)] leading-none truncate max-w-[150px]">
-                {activeThread.title}
-              </h2>
-              <p className="text-[9px] text-nike-volt font-black tracking-widest uppercase mt-1">
-                MOODRIVE AI
-              </p>
+          <div className="max-w-3xl mx-auto w-full flex items-center justify-between">
+            <div className="flex items-center">
+              <button 
+                onClick={() => setIsSidebarPinned(!isSidebarPinned)}
+                className={cn(
+                  "w-12 h-12 rounded-xl flex items-center justify-center mr-4 active:scale-95 transition-all text-white",
+                  isSidebarPinned ? "bg-nike-volt text-black" : "bg-white/5"
+                )}
+              >
+                <Menu size={24} />
+              </button>
+              <div className="text-left">
+                <h2 className="text-xl font-black italic tracking-tighter uppercase text-[var(--text-main)] leading-none truncate max-w-[150px]">
+                  {activeThread.title}
+                </h2>
+                <p className="text-[9px] text-nike-volt font-black tracking-widest uppercase mt-1">
+                  MOODRIVE AI
+                </p>
+              </div>
             </div>
-          </div>
 
-          <button 
-            onClick={startNewChat}
-            className="w-12 h-12 bg-nike-volt rounded-xl flex items-center justify-center active:scale-95 transition-all text-black shadow-lg shadow-nike-volt/20 shrink-0"
-          >
-            <Plus size={22} />
-          </button>
+            <button 
+              onClick={startNewChat}
+              className="w-12 h-12 bg-nike-volt rounded-xl flex items-center justify-center active:scale-95 transition-all text-black shadow-lg shadow-nike-volt/20 shrink-0"
+            >
+              <Plus size={22} />
+            </button>
+          </div>
         </div>
 
         {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto no-scrollbar px-4 py-6 space-y-6 pb-44">
+        <div className="flex-1 overflow-y-auto no-scrollbar px-4 py-6 space-y-6 pb-44 max-w-3xl mx-auto w-full">
           {messages.map((msg) => {
             const isAi = msg.role === 'assistant';
             const courseMatch = isAi ? getRecommendedCourse(msg.text) : null;
@@ -378,7 +380,7 @@ export const AIAssistant: React.FC = () => {
         </div>
 
         {/* Input Field */}
-        <div className="absolute bottom-[90px] left-0 right-0 p-4 bg-transparent z-50">
+        <div className="absolute bottom-[90px] left-0 right-0 p-4 bg-transparent z-50 max-w-3xl mx-auto w-full">
           <div className="flex items-center gap-2 bg-[#111111]/95 backdrop-blur-xl border border-white/10 rounded-[28px] px-3 py-2">
             <div className="flex-1 flex items-center bg-white/5 rounded-[20px] px-2 py-1">
               <input 

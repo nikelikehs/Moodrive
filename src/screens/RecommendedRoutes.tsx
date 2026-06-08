@@ -560,130 +560,131 @@ export const RecommendedRoutes: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-[#0a0a0a] px-6 pt-12 pb-32 relative transition-colors duration-300">
-      
-      {/* Header */}
-      <div className="flex justify-between items-center mb-10 shrink-0">
-        <div>
-          <h2 className="text-4xl font-black italic tracking-tighter text-white uppercase leading-none">
-            추천 테마 코스
-          </h2>
-          <p className="text-nike-volt font-mono text-[10px] mt-2 uppercase tracking-[0.3em] font-bold">
-            큐레이션 드라이브
-          </p>
+    <div className="w-full h-full flex flex-col bg-[#0a0a0a] px-6 pt-12 pb-32 relative transition-colors duration-300 overflow-hidden">
+      <div className="max-w-2xl mx-auto w-full flex flex-col flex-1 overflow-hidden">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-10 shrink-0">
+          <div>
+            <h2 className="text-4xl font-black italic tracking-tighter text-white uppercase leading-none">
+              추천 테마 코스
+            </h2>
+            <p className="text-nike-volt font-mono text-[10px] mt-2 uppercase tracking-[0.3em] font-bold">
+              큐레이션 드라이브
+            </p>
+          </div>
+          <Compass className="text-nike-volt opacity-20" size={40} />
         </div>
-        <Compass className="text-nike-volt opacity-20" size={40} />
-      </div>
-      
-      {/* Filters (Drag to Scroll bar) */}
-      <div className="mb-4 space-y-4 shrink-0">
-        <div 
-          ref={scrollRef}
-          onMouseDown={handleMouseDown}
-          onMouseLeave={handleMouseLeave}
-          onMouseUp={handleMouseUp}
-          onMouseMove={handleMouseMove}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-          onTouchMove={handleTouchMove}
-          style={{ scrollBehavior: isDown ? 'auto' : 'smooth' }}
-          className="flex gap-2 overflow-x-auto no-scrollbar pb-2 select-none cursor-grab active:cursor-grabbing"
-        >
-          {REGIONS.map(region => (
-            <button 
-              key={region.id}
-              onClick={() => setActiveRegion(region.id)}
+        
+        {/* Filters (Drag to Scroll bar) */}
+        <div className="mb-4 space-y-4 shrink-0">
+          <div 
+            ref={scrollRef}
+            onMouseDown={handleMouseDown}
+            onMouseLeave={handleMouseLeave}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            onTouchMove={handleTouchMove}
+            style={{ scrollBehavior: isDown ? 'auto' : 'smooth' }}
+            className="flex gap-2 overflow-x-auto no-scrollbar pb-2 select-none cursor-grab active:cursor-grabbing"
+          >
+            {REGIONS.map(region => (
+              <button 
+                key={region.id}
+                onClick={() => setActiveRegion(region.id)}
+                className={cn(
+                  "px-5 py-3 rounded-xl text-[10px] font-black tracking-widest uppercase transition-all border whitespace-nowrap pointer-events-auto",
+                  activeRegion === region.id 
+                    ? "bg-nike-volt border-nike-volt text-black shadow-lg" 
+                    : "bg-[#111111] border-white/5 text-white/40 hover:border-white/10"
+                )}
+              >
+                {region.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Type Toggle Tabs */}
+        <div className="flex gap-2 mb-8 shrink-0 bg-[#111111] p-1 rounded-2xl border border-white/5">
+          {[
+            { id: 'ALL', label: '⚡️ 전체 코스' },
+            { id: 'DRIVE', label: '🚗 드라이브 코스' },
+            { id: 'WALK', label: '🚶 걷기 코스' }
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveType(tab.id as any)}
               className={cn(
-                "px-5 py-3 rounded-xl text-[10px] font-black tracking-widest uppercase transition-all border whitespace-nowrap pointer-events-auto",
-                activeRegion === region.id 
-                  ? "bg-nike-volt border-nike-volt text-black shadow-lg" 
-                  : "bg-[#111111] border-white/5 text-white/40 hover:border-white/10"
+                "flex-1 py-3.5 rounded-xl text-[10px] font-black tracking-widest uppercase transition-all whitespace-nowrap",
+                activeType === tab.id
+                  ? "bg-[#222222] text-nike-volt border border-white/10"
+                  : "text-white/40 hover:text-white/70"
               )}
             >
-              {region.label}
+              {tab.label}
             </button>
           ))}
         </div>
-      </div>
 
-      {/* Type Toggle Tabs */}
-      <div className="flex gap-2 mb-8 shrink-0 bg-[#111111] p-1 rounded-2xl border border-white/5">
-        {[
-          { id: 'ALL', label: '⚡️ 전체 코스' },
-          { id: 'DRIVE', label: '🚗 드라이브 코스' },
-          { id: 'WALK', label: '🚶 걷기 코스' }
-        ].map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveType(tab.id as any)}
-            className={cn(
-              "flex-1 py-3.5 rounded-xl text-[10px] font-black tracking-widest uppercase transition-all whitespace-nowrap",
-              activeType === tab.id
-                ? "bg-[#222222] text-nike-volt border border-white/10"
-                : "text-white/40 hover:text-white/70"
-            )}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Cards List (Flat Style) */}
-      <div className="flex-1 overflow-y-auto no-scrollbar space-y-6">
-        {filteredRoutes.length > 0 ? filteredRoutes.map((route) => (
-          <div 
-            key={route.id}
-            onClick={() => startRoute(route)}
-            className="w-full h-80 rounded-[32px] overflow-hidden relative cursor-pointer group border border-white/5 bg-[#111111] active:scale-[0.98] transition-transform"
-          >
-            <img 
-              src={route.image} 
-              alt={route.titleEn}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-50"
-            />
-            
-            <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-app)] via-transparent to-transparent"></div>
-            
-            <div className="absolute top-6 left-6 flex gap-2">
-              <span className={cn(
-                "backdrop-blur-md border px-3 py-1.5 rounded-lg text-[9px] font-black tracking-widest uppercase flex items-center gap-1.5",
-                route.type === 'WALK' 
-                  ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" 
-                  : "bg-white/5 border-white/10 text-white"
-              )}>
-                {route.type === 'WALK' ? '🚶 WALK' : '🚗 DRIVE'}
-              </span>
-              <span className="bg-white/5 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-lg text-[9px] font-black tracking-widest text-white/60 uppercase">
-                {route.tags[0]}
-              </span>
-            </div>
-
-            <div className="absolute bottom-6 left-6 right-6 flex justify-between items-end">
-              <div className="text-left">
-                <h3 className="text-2xl font-black italic tracking-tighter text-white uppercase leading-none mb-2 pr-4">
-                  {route.title}
-                </h3>
-                <p className={cn(
-                  "font-bold text-[10px] uppercase tracking-widest",
-                  route.type === 'WALK' ? "text-emerald-400" : "text-nike-volt"
+        {/* Cards List (Flat Style) */}
+        <div className="flex-1 overflow-y-auto no-scrollbar space-y-6">
+          {filteredRoutes.length > 0 ? filteredRoutes.map((route) => (
+            <div 
+              key={route.id}
+              onClick={() => startRoute(route)}
+              className="w-full h-80 rounded-[32px] overflow-hidden relative cursor-pointer group border border-white/5 bg-[#111111] active:scale-[0.98] transition-transform"
+            >
+              <img 
+                src={route.image} 
+                alt={route.titleEn}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-50"
+              />
+              
+              <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-app)] via-transparent to-transparent"></div>
+              
+              <div className="absolute top-6 left-6 flex gap-2">
+                <span className={cn(
+                  "backdrop-blur-md border px-3 py-1.5 rounded-lg text-[9px] font-black tracking-widest uppercase flex items-center gap-1.5",
+                  route.type === 'WALK' 
+                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" 
+                    : "bg-white/5 border-white/10 text-white"
                 )}>
-                  {route.titleEn}
-                </p>
+                  {route.type === 'WALK' ? '🚶 WALK' : '🚗 DRIVE'}
+                </span>
+                <span className="bg-white/5 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-lg text-[9px] font-black tracking-widest text-white/60 uppercase">
+                  {route.tags[0]}
+                </span>
               </div>
 
-              <div className={cn(
-                "w-14 h-14 rounded-full flex items-center justify-center shrink-0 transition-transform group-hover:scale-110",
-                route.type === 'WALK' ? "bg-emerald-500 text-black" : "bg-nike-volt text-black"
-              )}>
-                <Play size={20} className="text-black fill-black ml-1" />
+              <div className="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+                <div className="text-left">
+                  <h3 className="text-2xl font-black italic tracking-tighter text-white uppercase leading-none mb-2 pr-4">
+                    {route.title}
+                  </h3>
+                  <p className={cn(
+                    "font-bold text-[10px] uppercase tracking-widest",
+                    route.type === 'WALK' ? "text-emerald-400" : "text-nike-volt"
+                  )}>
+                    {route.titleEn}
+                  </p>
+                </div>
+
+                <div className={cn(
+                  "w-14 h-14 rounded-full flex items-center justify-center shrink-0 transition-transform group-hover:scale-110",
+                  route.type === 'WALK' ? "bg-emerald-500 text-black" : "bg-nike-volt text-black"
+                )}>
+                  <Play size={20} className="text-black fill-black ml-1" />
+                </div>
               </div>
             </div>
-          </div>
-        )) : (
-          <div className="flex flex-col items-center justify-center h-40 text-white/20 uppercase italic font-black">
-            추천 코스가 존재하지 않습니다.
-          </div>
-        )}
+          )) : (
+            <div className="flex flex-col items-center justify-center h-40 text-white/20 uppercase italic font-black">
+              추천 코스가 존재하지 않습니다.
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

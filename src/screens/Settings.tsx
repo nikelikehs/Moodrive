@@ -25,7 +25,7 @@ import { voiceService, VOICE_PERSONAS } from '../services/voice';
 export const Settings: React.FC = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, isGrayscale, toggleGrayscale } = useTheme();
 
   const currentLanguage = i18n.language;
   const [geminiKey, setGeminiKey] = useState(() => localStorage.getItem('moodrive_gemini_key') || '');
@@ -180,18 +180,20 @@ export const Settings: React.FC = () => {
     <div className="absolute inset-0 bg-[#0a0a0a] flex flex-col font-sans text-white select-none">
       {/* Header */}
       <div className="px-6 py-6 flex items-center bg-[#0a0a0a] border-b border-white/5 sticky top-0 z-[100] shrink-0">
-        <button 
-          onClick={() => navigate(-1)} 
-          className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mr-4 active:scale-90 active:bg-white/10 transition-all border border-white/5"
-        >
-          <ChevronLeft className="text-white" size={24} />
-        </button>
-        <h1 className="text-xl font-black italic tracking-tighter uppercase text-white leading-none">
-          {t('nav_settings')}
-        </h1>
+        <div className="max-w-2xl mx-auto w-full flex items-center">
+          <button 
+            onClick={() => navigate(-1)} 
+            className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mr-4 active:scale-90 active:bg-white/10 transition-all border border-white/5"
+          >
+            <ChevronLeft className="text-white" size={24} />
+          </button>
+          <h1 className="text-xl font-black italic tracking-tighter uppercase text-white leading-none">
+            {t('nav_settings')}
+          </h1>
+        </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-8 pb-32">
+      <div className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-8 pb-32 max-w-2xl mx-auto w-full">
         {/* 1. User Profile Card */}
         {currentUser && (
           <div className="bg-[#111111] border border-white/5 p-6 rounded-[32px] text-left relative overflow-hidden animate-in fade-in duration-300">
@@ -629,6 +631,29 @@ export const Settings: React.FC = () => {
                 className={cn(
                   "w-4 h-4 rounded-full bg-white shadow-md transform transition-transform duration-300",
                   theme === 'dark' ? "translate-x-6 bg-black" : "translate-x-0"
+                )} 
+              />
+            </button>
+          </div>
+
+          <div className="bg-[#111111] border border-white/5 rounded-[32px] p-5 flex items-center justify-between mt-4">
+            <div>
+              <h4 className="text-xs font-bold text-white">흑백 모드 적용</h4>
+              <p className="text-[9px] text-white/30 font-medium mt-0.5">화면을 흑백톤으로 변경하여 피로도를 줄입니다.</p>
+            </div>
+            
+            {/* Sliding Toggle Switch for Grayscale Mode */}
+            <button 
+              onClick={toggleGrayscale}
+              className={cn(
+                "w-12 h-6 rounded-full p-1 transition-colors duration-300 relative focus:outline-none shrink-0",
+                isGrayscale ? "bg-nike-volt" : "bg-white/10"
+              )}
+            >
+              <div 
+                className={cn(
+                  "w-4 h-4 rounded-full bg-white shadow-md transform transition-transform duration-300",
+                  isGrayscale ? "translate-x-6 bg-black" : "translate-x-0"
                 )} 
               />
             </button>

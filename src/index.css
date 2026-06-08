@@ -88,3 +88,8 @@
   @apply bg-nike-volt text-black hover:bg-white;
 }
 
+.grayscale-mode {
+  filter: grayscale(100%) !important;
+}
+
+

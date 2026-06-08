@@ -32,7 +32,7 @@ const BottomNav = () => {
       {/* Ultra-slim trigger area at the very bottom edge */}
       <div className="absolute bottom-0 left-0 right-0 h-6 pointer-events-auto" />
       
-      <div className="w-full px-5 pb-4 pointer-events-none">
+      <div className="w-full max-w-md mx-auto px-5 pb-4 pointer-events-none">
         <div className={cn(
           "h-[68px] bg-[#111111]/95 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-around px-2 pointer-events-auto transition-all duration-500 transform shadow-none",
           isTouch 
@@ -78,8 +78,8 @@ const BottomNav = () => {
 
 export const MobileLayout: React.FC = () => {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex justify-center items-center p-0 md:p-8 transition-colors duration-300">
-      <div className="w-full h-[100dvh] md:h-[844px] md:max-h-[100vh] max-w-[390px] bg-[#0a0a0a] md:rounded-[40px] border-none overflow-hidden relative flex flex-col transition-colors duration-300 shadow-none">
+    <div className="min-h-screen bg-[#0a0a0a] flex justify-center items-center p-0 transition-colors duration-300">
+      <div className="w-full h-[100dvh] md:h-screen md:max-h-screen max-w-none bg-[#0a0a0a] border-none overflow-hidden relative flex flex-col transition-colors duration-300 shadow-none">
         <div className="flex-1 overflow-hidden relative bg-[#0a0a0a] transition-colors duration-300">
           <Outlet />
         </div>

@@ -5,6 +5,8 @@ type Theme = 'light' | 'dark';
 interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
+  isGrayscale: boolean;
+  toggleGrayscale: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -18,6 +20,10 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
 
+  const [isGrayscale, setIsGrayscale] = useState<boolean>(() => {
+    return localStorage.getItem('moodrive-grayscale') === 'true';
+  });
+
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
@@ -25,12 +31,26 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     localStorage.setItem('moodrive-theme', theme);
   }, [theme]);
 
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (isGrayscale) {
+      root.classList.add('grayscale-mode');
+    } else {
+      root.classList.remove('grayscale-mode');
+    }
+    localStorage.setItem('moodrive-grayscale', String(isGrayscale));
+  }, [isGrayscale]);
+
   const toggleTheme = () => {
     setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
   };
 
+  const toggleGrayscale = () => {
+    setIsGrayscale(prev => !prev);
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, isGrayscale, toggleGrayscale }}>
       {children}
     </ThemeContext.Provider>
   );
@@ -43,3 +63,4 @@ export const useTheme = () => {
   }
   return context;
 };
+
