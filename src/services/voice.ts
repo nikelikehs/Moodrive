@@ -107,6 +107,10 @@ class VoiceService {
   }
 
   speak(text: string) {
+    if (typeof window !== 'undefined') {
+      const isVoiceEnabled = localStorage.getItem('moodrive_voice_enabled') !== 'false';
+      if (!isVoiceEnabled) return;
+    }
     if (!window.speechSynthesis) return;
     
     // Stop any existing speech

@@ -57,6 +57,7 @@ export const Settings: React.FC = () => {
   // Voice settings state
   const [selectedPersonaId, setSelectedPersonaId] = useState(() => localStorage.getItem('moodrive_selected_persona_id') || 'nike_male');
   const [voiceRate, setVoiceRate] = useState(() => localStorage.getItem('moodrive_voice_rate') || '1.0');
+  const [isVoiceEnabled, setIsVoiceEnabled] = useState(() => localStorage.getItem('moodrive_voice_enabled') !== 'false');
 
   const handleLogout = async () => {
     try {
@@ -135,6 +136,12 @@ export const Settings: React.FC = () => {
   const handleSetVoiceRate = (rate: string) => {
     setVoiceRate(rate);
     localStorage.setItem('moodrive_voice_rate', rate);
+  };
+
+  const handleToggleVoiceEnabled = () => {
+    const next = !isVoiceEnabled;
+    setIsVoiceEnabled(next);
+    localStorage.setItem('moodrive_voice_enabled', String(next));
   };
 
   const handlePreviewVoice = (id: string, e: React.MouseEvent) => {
@@ -362,6 +369,28 @@ export const Settings: React.FC = () => {
           </div>
 
           <div className="bg-[#111111] border border-white/5 rounded-[32px] p-5 space-y-5">
+            {/* AI Voice Toggle Switch */}
+            <div className="flex items-center justify-between pb-3 border-b border-white/5">
+              <div>
+                <h4 className="text-xs font-bold text-white">AI 음성 안내 활성화</h4>
+                <p className="text-[9px] text-white/30 font-medium mt-0.5">내비게이션 및 안내음 소리를 켜거나 끕니다.</p>
+              </div>
+              <button 
+                onClick={handleToggleVoiceEnabled}
+                className={cn(
+                  "w-12 h-6 rounded-full p-1 transition-colors duration-300 relative focus:outline-none shrink-0",
+                  isVoiceEnabled ? "bg-nike-volt" : "bg-white/10"
+                )}
+              >
+                <div 
+                  className={cn(
+                    "w-4 h-4 rounded-full bg-white shadow-md transform transition-transform duration-300",
+                    isVoiceEnabled ? "translate-x-6 bg-black" : "translate-x-0"
+                  )} 
+                />
+              </button>
+            </div>
+
             {/* Speed Rate Segment */}
             <div className="space-y-2">
               <label className="text-[10px] font-bold text-white/50 pl-1">안내 음성 속도</label>

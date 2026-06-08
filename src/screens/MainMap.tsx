@@ -122,16 +122,32 @@ export const MainMap: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
-  const [isNavigating, setIsNavigating] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(() => localStorage.getItem('moodrive_is_navigating') === 'true');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [polylinePath, setPolylinePath] = useState<{ lat: number, lng: number }[]>([]);
-  const [coursePolylinePath, setCoursePolylinePath] = useState<{ lat: number, lng: number }[]>([]);
-  const [navInfo, setNavInfo] = useState({ distance: 0, duration: 0, toll: 0 });
-  const [simSegment, setSimSegment] = useState<'TRANSIT' | 'COURSE' | 'NONE'>('NONE');
-  const [transportMode, setTransportMode] = useState<'CAR' | 'BUS' | 'WALK' | 'BIKE'>('CAR');
+  const [polylinePath, setPolylinePath] = useState<{ lat: number, lng: number }[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('moodrive_polyline_path') || '[]');
+    } catch(e) { return []; }
+  });
+  const [coursePolylinePath, setCoursePolylinePath] = useState<{ lat: number, lng: number }[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('moodrive_course_polyline_path') || '[]');
+    } catch(e) { return []; }
+  });
+  const [navInfo, setNavInfo] = useState<{ distance: number, duration: number, toll: number }>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('moodrive_nav_info') || '{"distance":0,"duration":0,"toll":0}');
+    } catch(e) { return { distance: 0, duration: 0, toll: 0 }; }
+  });
+  const [simSegment, setSimSegment] = useState<'TRANSIT' | 'COURSE' | 'NONE'>(() => {
+    return (localStorage.getItem('moodrive_sim_segment') as any) || 'NONE';
+  });
+  const [transportMode, setTransportMode] = useState<'CAR' | 'BUS' | 'WALK' | 'BIKE'>(() => {
+    return (localStorage.getItem('moodrive_transport_mode') as any) || 'CAR';
+  });
   const [currentSpeed, setCurrentSpeed] = useState<number>(0);
   const [gpsSpeed, setGpsSpeed] = useState<number | null>(null);
-  const [isSafetyDriveMode, setIsSafetyDriveMode] = useState(false);
+  const [isSafetyDriveMode, setIsSafetyDriveMode] = useState(() => localStorage.getItem('moodrive_is_safety_drive') === 'true');
   const [isOnHighway, setIsOnHighway] = useState(false);
   const [trafficStatus, setTrafficStatus] = useState("교통 상황 원활");
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
@@ -140,8 +156,12 @@ export const MainMap: React.FC = () => {
   const [currentPos, setCurrentPos] = useState({ lat: 37.5665, lng: 126.9780 });
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [selectedPlace, setSelectedPlace] = useState<any>(null);
-  const [destination, setDestination] = useState("");
+  const [selectedPlace, setSelectedPlace] = useState<any>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('moodrive_selected_place') || 'null');
+    } catch(e) { return null; }
+  });
+  const [destination, setDestination] = useState(() => localStorage.getItem('moodrive_destination') || '');
   const [startPlace, setStartPlace] = useState<any | null>(null);
   const [activeSearchField, setActiveSearchField] = useState<'start' | 'destination' | 'none'>('none');
   const [points] = useState(12450);
@@ -172,6 +192,29 @@ export const MainMap: React.FC = () => {
     { id: 'ra1', type: 'RA', name: '기흥 휴게소', distance: 12.5, info: '휘 1,595 | 경 1,395' },
     { id: 'tg2', type: 'TG', name: '수원신갈 TG', distance: 21.0, info: '통행료 1,200원' },
     { id: 'ra2', type: 'RA', name: '죽전 휴게소', distance: 32.4, info: '휘 1,580 | 경 1,380' }
+  ]);
+
+  // Sync navigation states to localStorage to persist across route transitions
+  useEffect(() => {
+    localStorage.setItem('moodrive_is_navigating', String(isNavigating));
+    localStorage.setItem('moodrive_is_safety_drive', String(isSafetyDriveMode));
+    localStorage.setItem('moodrive_destination', destination);
+    localStorage.setItem('moodrive_polyline_path', JSON.stringify(polylinePath));
+    localStorage.setItem('moodrive_course_polyline_path', JSON.stringify(coursePolylinePath));
+    localStorage.setItem('moodrive_nav_info', JSON.stringify(navInfo));
+    localStorage.setItem('moodrive_sim_segment', simSegment);
+    localStorage.setItem('moodrive_transport_mode', transportMode);
+    localStorage.setItem('moodrive_selected_place', JSON.stringify(selectedPlace));
+  }, [
+    isNavigating,
+    isSafetyDriveMode,
+    destination,
+    polylinePath,
+    coursePolylinePath,
+    navInfo,
+    simSegment,
+    transportMode,
+    selectedPlace
   ]);
 
   // Highway countdown simulation
@@ -810,6 +853,8 @@ export const MainMap: React.FC = () => {
               setSimSegment('NONE');
               setPolylinePath([]);
               setCoursePolylinePath([]);
+              setDestination('');
+              setSelectedPlace(null);
               if (transportMode === 'WALK') {
                 voiceService.speak("도보 산책 코스를 안전하게 완주하셨습니다. 즐거운 시간 되셨길 바랍니다! 감사합니다.");
               } else {
@@ -825,6 +870,10 @@ export const MainMap: React.FC = () => {
             setIsNavigating(false);
             setIsSafetyDriveMode(false);
             setPolylinePath([]);
+            setCoursePolylinePath([]);
+            setSimSegment('NONE');
+            setDestination('');
+            setSelectedPlace(null);
             voiceService.speak(transportMode === 'WALK' ? "목적지에 도착하여 도보 안내를 종료합니다. 수고하셨습니다." : "목적지에 도착하여 경로 안내를 종료합니다. 안전 운전해 주셔서 감사합니다.");
           }
         }
@@ -1320,6 +1369,8 @@ export const MainMap: React.FC = () => {
               setCoursePolylinePath([]); 
               setSimSegment('NONE');
               setIsStatsMinimized(false);
+              setDestination('');
+              setSelectedPlace(null);
             }}
             className="absolute right-6 top-[136px] z-[100] bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-2xl text-[10px] font-black italic uppercase tracking-wider shadow-2xl active:scale-95 transition-all flex items-center gap-1.5 pointer-events-auto"
             title="운행 종료"
